@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FDA4FE49-DFDE-40BC-BEF5-CE50F4B0D9E3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LewdableTanks</RootNamespace>
+    <AssemblyName>LewdableTanks</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CCDEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\ModTek\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\BattleTech_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\BattleTech_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CustomComponents">
+      <HintPath>..\..\..\Mods\CustomComponents\CustomComponents.dll</HintPath>
+    </Reference>
+    <Reference Include="CustomSalvage">
+      <HintPath>..\..\..\Mods\CustomSalvage\CustomSalvage.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CustomShops">
+      <HintPath>..\..\..\Mods\CustomShops\CustomShops.dll</HintPath>
+    </Reference>
+    <Reference Include="CustomUnits">
+      <HintPath>..\..\..\Mods\CustomUnits\CustomUnits.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="InControl">
+      <HintPath>..\..\..\BattleTech_Data\Managed\InControl.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <HintPath>..\..\..\BattleTech_Data\Managed\System.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>..\..\..\BattleTech_Data\Managed\System.Runtime.Serialization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <HintPath>..\..\..\BattleTech_Data\Managed\System.Xml.Linq.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\..\BattleTech_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.Networking.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Control.cs" />
+    <Compile Include="Extentions.cs" />
+    <Compile Include="Patches\ChassisHandler_GetMechInfo.cs" />
+    <Compile Include="Patches\ChassisHandler_GetMechType.cs" />
+    <Compile Include="Patches\ChassisHandler_GetPrefabID.cs" />
+    <Compile Include="Patches\Contract_CompleteContract.cs" />
+    <Compile Include="Patches\Contract_GenerateSalvage_ProccessPlayerMech.cs" />
+    <Compile Include="Patches\GetMDefFromCDef.cs" />
+    <Compile Include="Patches\ChassisHandler_MakeMech.cs" />
+    <Compile Include="Patches\GenerateSalvage_AddVechicleToSalvage.cs" />
+    <Compile Include="Patches\MechBayChassisInfoWidget_SetDescriptions_GetMechTags.cs" />
+    <Compile Include="Patches\MechBayMechInfoWidget_OnUnreadyClicked_Prefix.cs" />
+    <Compile Include="Patches\MechBayPanel_Init.cs" />
+    <Compile Include="Patches\MechBayPanel_OnReadyMech.cs" />
+    <Compile Include="Patches\ShopDefItem_ToSalvageDef.cs" />
+    <Compile Include="Patches\SH_Shop_Screen_AddShopItemToWidget.cs" />
+    <Compile Include="Patches\SimGameState_ScrapActiveMech.cs" />
+    <Compile Include="Patches\SimGameState_ScrapInactiveMech.cs" />
+    <Compile Include="Patches\SimGameState_ScrapMechParts.cs" />
+    <Compile Include="Patches\SimGameState_UnreadyMech.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SortFix\AAR_SalvageChosen_SortBy_Name.cs" />
+    <Compile Include="SortFix\ListElementController_SalvageMechPart_NotListView_GetName.cs" />
+    <Compile Include="UIName.cs" />
+    <Compile Include="VAssembleVariant.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
