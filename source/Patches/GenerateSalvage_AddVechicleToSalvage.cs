@@ -28,9 +28,9 @@ namespace LewdableTanks.Patches
                     int min_parts = 1;
                     int max_parts = simgame.Constants.Story.DefaultMechPartMax;
 
-                    var total = vechicle.SummaryArmorMax + vechicle.SummaryStructureMax;
-                    var current = vechicle.SummaryArmorCurrent + vechicle.SummaryStructureCurrent;
- 
+                    var total = vechicle.SummaryArmorMax * Control.Instance.Settings.ArmorEffectOnHP + vechicle.SummaryStructureMax;
+                    var current = vechicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vechicle.SummaryStructureCurrent;
+
                     var parts = Mathf.Clamp(Mathf.CeilToInt(current / total * max_parts), min_parts, max_parts);
                     Control.Instance.LogDebug(DInfo.Salvage, "Salvaging {0} - hp: {1:0.0}/{2:0.0} parts:{3}", vid,
                         current, total, parts);
