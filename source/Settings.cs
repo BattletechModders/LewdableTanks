@@ -54,6 +54,7 @@ namespace LewdableTanks
         public float RecoveryChanceConstantMod { get; set; } = -0.5f;
         public float RecoveryChanceHPMod { get; set; } = 0.5f;
         public float RecoveryChanceHPBase { get; set; } = -0.5f;
+        public float ArmorEffectOnHP {get; set; } = 1f;
 
         public string OmniTechTag { get; set; } = "omni_tank";
 

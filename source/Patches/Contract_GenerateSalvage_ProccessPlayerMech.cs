@@ -149,15 +149,15 @@ namespace LewdableTanks.Patches
                     return rnd < chance;
 
                 case PlayerVehicleRecoveryType.HpLeft:
-                    var total = vehicle.SummaryArmorMax + vehicle.SummaryStructureMax;
-                    var current = vehicle.SummaryArmorCurrent + vehicle.SummaryStructureCurrent;
+                    var total = vehicle.SummaryArmorMax * Control.Instance.Settings.ArmorEffectOnHP+ vehicle.SummaryStructureMax;
+                    var current = vehicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureCurrent;
                     var max = (current / total) * Control.Instance.Settings.RecoveryChanceHPMod + Control.Instance.Settings.RecoveryChanceHPBase ;
                     var roll = CustomShops.Control.State.Sim.NetworkRandom.Float();
                     Control.Instance.LogDebug(DInfo.Salvage, " --- chance:{0:0.00} roll:{1:0.00}, {2}", max, roll, (roll < max ? "recovered" : "failed"));
                     return roll < max;
                 case PlayerVehicleRecoveryType.HpLeftConstant:
-                    var totalhp = vehicle.SummaryArmorMax + vehicle.SummaryStructureMax;
-                    var currenthp = vehicle.SummaryArmorCurrent + vehicle.SummaryStructureCurrent;
+                    var totalhp = vehicle.SummaryArmorMax * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureMax;
+                    var currenthp = vehicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureCurrent;
                     var maxhp = (currenthp / totalhp + Control.Instance.Settings.RecoveryChanceHPBase) * Control.Instance.Settings.RecoveryChanceHPMod;
                     var bchance = CustomShops.Control.State.Sim.Constants.Salvage.DestroyedMechRecoveryChance +
                                   Control.Instance.Settings.RecoveryChanceConstantMod;
@@ -176,8 +176,8 @@ namespace LewdableTanks.Patches
             int min_parts = 1;
             int max_parts = simgame.Constants.Story.DefaultMechPartMax;
 
-            var total = vehicle.SummaryArmorMax + vehicle.SummaryStructureMax;
-            var current = vehicle.SummaryArmorCurrent + vehicle.SummaryStructureCurrent;
+            var total = vehicle.SummaryArmorMax * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureMax;
+            var current = vehicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureCurrent;
 
             var parts = Mathf.Clamp(Mathf.CeilToInt(current / total * max_parts), min_parts, max_parts);
             Control.Instance.LogDebug(DInfo.Salvage, "-- hp: {0:0.0}/{1:0.0} parts:{2}",
