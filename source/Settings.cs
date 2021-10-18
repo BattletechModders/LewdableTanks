@@ -60,5 +60,7 @@ namespace LewdableTanks
         public bool AllowFrankenTank { get; set; } = true;
 
         public float VehiclePartCostMult { get; set; } = 1;
+
+        public string NoVehiclePartsTag = "";
     }
 }

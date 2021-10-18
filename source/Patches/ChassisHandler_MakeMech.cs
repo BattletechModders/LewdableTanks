@@ -10,7 +10,7 @@ namespace LewdableTanks.Patches
     {
         public static bool in_work = false;
         public static bool empty = false;
-        public static bool broke = false;
+        public static BrokeType broke = BrokeType.None;
 
         [HarmonyPrefix]
         public static void Prepare()
@@ -20,9 +20,9 @@ namespace LewdableTanks.Patches
             if (in_work)
             {
                 empty = CustomSalvage.Control.Instance.Settings.UnEquipedMech;
-                broke = CustomSalvage.Control.Instance.Settings.BrokenMech;
+                broke = CustomSalvage.Control.Instance.Settings.MechBrokeType;
 
-                CustomSalvage.Control.Instance.Settings.BrokenMech = false;
+                CustomSalvage.Control.Instance.Settings.MechBrokeType = BrokeType.None;
                 CustomSalvage.Control.Instance.Settings.UnEquipedMech = false;
             }
         }
@@ -32,7 +32,7 @@ namespace LewdableTanks.Patches
         {
             if (in_work)
             {
-                CustomSalvage.Control.Instance.Settings.BrokenMech = broke;
+                CustomSalvage.Control.Instance.Settings.MechBrokeType = broke;
                 CustomSalvage.Control.Instance.Settings.UnEquipedMech = empty;
             }
         }

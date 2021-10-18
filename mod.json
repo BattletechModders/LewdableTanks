@@ -3,7 +3,7 @@
 	"Author": "Denadan",
 	"Website": "https://github.com/Denadan/LewdableTanks",
 
-	"Enabled": true,
+	"Enabled": false,
 	"DependsOn": ["CustomSalvage", "CustomUnits"],
 	"DLL": "LewdableTanks.dll",
 	"DLLEntryPoint": "LewdableTanks.Control.Init",

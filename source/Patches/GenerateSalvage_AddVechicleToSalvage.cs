@@ -25,6 +25,13 @@ namespace LewdableTanks.Patches
 
                 if (simgame.DataManager.MechDefs.TryGet(vid, out var mech))
                 {
+                    if (!string.IsNullOrEmpty(Control.Instance.Settings.NoVehiclePartsTag))
+                        if (vechicle.VehicleDef.VehicleTags.Contains(Control.Instance.Settings.NoVehiclePartsTag))
+                        {
+                            Control.Instance.LogDebug(DInfo.Salvage, "Salvaging {0} - no parts by tags", vid);
+                            return;
+                        }
+
                     int min_parts = 1;
                     int max_parts = simgame.Constants.Story.DefaultMechPartMax;
 

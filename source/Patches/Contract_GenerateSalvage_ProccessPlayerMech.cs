@@ -164,7 +164,7 @@ namespace LewdableTanks.Patches
                     var tchance = bchance + maxhp;
 
                     var r = CustomShops.Control.State.Sim.NetworkRandom.Float();
-                    Control.Instance.LogDebug(DInfo.Salvage, " --- chance:{0:0.00} roll:{1:0.00}, base:{2:0.00}, Hp:{3:0.00} {4}", tchance, r, bchance, maxhp, (tchance < r ? "recovered" : "failed"));
+                    Control.Instance.LogDebug(DInfo.Salvage, " --- chance:{0:0.00} roll:{1:0.00}, base:{2:0.00}, Hp:{3:0.00} {4}", tchance, r, bchance, maxhp, (r < tchance ? "recovered" : "failed"));
                     return r < tchance;
             }
             return false;
@@ -264,6 +264,13 @@ namespace LewdableTanks.Patches
 
         private static void ReturnParts(ContractHelper contract, Vehicle vehicle, MechDef mech)
         {
+            if(!string.IsNullOrEmpty(Control.Instance.Settings.NoVehiclePartsTag))
+                if (vehicle.VehicleDef.VehicleTags.Contains(Control.Instance.Settings.NoVehiclePartsTag))
+                {
+                    Control.Instance.LogDebug(DInfo.Salvage, "Returning {0} - no parts by tags", mech.Description.Id);
+                    return;
+                }
+
             var simgame = contract.Contract.BattleTechGame.Simulation;
             var parts = NumParts(vehicle, simgame);
 
@@ -273,12 +280,18 @@ namespace LewdableTanks.Patches
 
         private static void SalvageParts(ContractHelper contract, Vehicle vehicle, MechDef mech)
         {
+            if (!string.IsNullOrEmpty(Control.Instance.Settings.NoVehiclePartsTag))
+                if (vehicle.VehicleDef.VehicleTags.Contains(Control.Instance.Settings.NoVehiclePartsTag))
+                {
+                    Control.Instance.LogDebug(DInfo.Salvage, "Salvaging {0} - no parts by tags", mech.Description.Id);
+                    return;
+                }
+
             var simgame = contract.Contract.BattleTechGame.Simulation;
             var parts = NumParts(vehicle, simgame);
 
             if (string.IsNullOrEmpty(CustomSalvage.Control.Instance.Settings.NoSalvageVehicleTag) || !vehicle.VehicleDef.VehicleTags.Contains(CustomSalvage.Control.Instance.Settings.NoSalvageVehicleTag))
                 contract.AddMechPartsToPotentialSalvage(simgame.Constants, mech, parts);
-
         }
     }
 
