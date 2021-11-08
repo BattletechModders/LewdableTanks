@@ -5,6 +5,7 @@ using CustomSalvage;
 using CustomUnits;
 using Harmony;
 using Localize;
+using Strings = Localize.Strings;
 
 namespace LewdableTanks.Patches
 {

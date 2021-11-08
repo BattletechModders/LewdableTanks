@@ -8,8 +8,8 @@ using UnityEngine;
 
 namespace LewdableTanks.Patches
 {
-    [HarmonyPatch(typeof(ChassisHandler))]
-    [HarmonyPatch("GetMechInfo")]
+    //[HarmonyPatch(typeof(ChassisHandler))]
+    //[HarmonyPatch("GetMechInfo")]
     public static class ChassisHandler_GetMechInfo
     {
         [HarmonyPrefix]

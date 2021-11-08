@@ -122,9 +122,11 @@
   <ItemGroup>
     <Compile Include="Control.cs" />
     <Compile Include="Extentions.cs" />
+    <Compile Include="Patches\ChassisHandler_build_mech_tags.cs" />
     <Compile Include="Patches\ChassisHandler_GetMechInfo.cs" />
     <Compile Include="Patches\ChassisHandler_GetMechType.cs" />
     <Compile Include="Patches\ChassisHandler_GetPrefabID.cs" />
+    <Compile Include="Patches\ChassisHandler_get_variant.cs" />
     <Compile Include="Patches\Contract_CompleteContract.cs" />
     <Compile Include="Patches\Contract_GenerateSalvage_ProccessPlayerMech.cs" />
     <Compile Include="Patches\GetMDefFromCDef.cs" />

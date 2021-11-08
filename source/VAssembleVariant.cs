@@ -1,22 +1,19 @@
 ﻿using BattleTech;
 using CustomComponents;
+using CustomSalvage;
 
 namespace LewdableTanks
 {
     [CustomComponent("VAssemblyVariant")]
-    public class VAssemblyVariant : SimpleCustom<VehicleChassisDef>
+    public class VAssemblyVariant : SimpleCustom<VehicleChassisDef>, IAssemblyVariant
     {
-        public string PrefabID = "";
-        public bool Exclude = false;
-        public bool Include = false;
+        public string PrefabID { get; set; } = "";
+        public bool Exclude { get; set; } = false;
+        public bool Include { get; set; } = false;
 
-        //public bool Special = false;
-        //public bool CanUseSpecial = false;
-        //public bool CanUseOnNormal = false;
-
-        public bool ReplacePriceMult = false;
-        public float PriceMult = 1f;
-        public float PartsMin = -1;
+       public bool ReplacePriceMult { get; set; } = false;
+        public float PriceMult { get; set; } = 1f;
+        public float PartsMin { get; set; } = -1;
 
         public override string ToString()
         {
