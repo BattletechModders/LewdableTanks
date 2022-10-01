@@ -30,6 +30,10 @@ namespace LewdableTanks
 
             foreach (var mechdef in mechdefs)
             {
+                if (!IsVehicle(mechdef))
+                {
+                    continue;
+                }
                 var t = new Traverse(mechdef);
                 t.Field<int>("simGameMechPartCost").Value = (int)(mechdef.Description.Cost / 5 * k);
                 Control.Instance.LogDebug(DInfo.AutoFix, "Fixing cost of {0} set to {1}", mechdef.Description.Id,
@@ -41,6 +45,11 @@ namespace LewdableTanks
         {
             foreach (var mechdef in mechdefs)
             {
+                if (!IsVehicle(mechdef))
+                {
+                    continue;
+                }
+
                 if (!mechdef.Description.Details.Contains("#Weapons:"))
                 {
                     var sb = new StringBuilder("\n#Weapons:\n");
@@ -82,6 +91,10 @@ namespace LewdableTanks
                 if (!string.IsNullOrEmpty(mechdef.Description.UIName))
                     continue;
 
+                if (!IsVehicle(mechdef))
+                {
+                    continue;
+                }
 
                 var tm = new Traverse(mechdef.Description);
                 var tc = new Traverse(mechdef.Chassis.Description);

@@ -70,11 +70,11 @@ namespace LewdableTanks
                 CustomComponents.Registry.RegisterSimpleCustomComponents(Assembly.GetExecutingAssembly());
 
                 if (Settings.FixMechPartCost)
-                    CustomComponents.AutoFixer.Shared.RegisterMechFixer(Extentions.FixVehicleCost, Settings.FakeVehicleTag);
+                    CustomComponents.AutoFixer.Shared.RegisterMechFixer(Extentions.FixVehicleCost);
                 if (Settings.FixUIName)
-                    CustomComponents.AutoFixer.Shared.RegisterMechFixer(Extentions.FixVehicleUIName, Settings.FakeVehicleTag);
+                    CustomComponents.AutoFixer.Shared.RegisterMechFixer(Extentions.FixVehicleUIName);
                 if (Settings.AddWeaponToDescription)
-                    CustomComponents.AutoFixer.Shared.RegisterMechFixer(Extentions.FixDescription, Settings.FakeVehicleTag);
+                    CustomComponents.AutoFixer.Shared.RegisterMechFixer(Extentions.FixDescription);
 
                 Logger.LogDebug("done");
 
