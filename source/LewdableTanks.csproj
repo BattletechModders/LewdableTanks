@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Condition="'$(LewdableTanksModPath)' == '' And Exists('$(BattleTechGameDir)\Mods\Core\LewdableTanks')">
+    <!-- RogueTech -->
+    <LewdableTanksModPath>$(BattleTechGameDir)\Mods\Core\LewdableTanks</LewdableTanksModPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(LewdableTanksModPath)' == '' And Exists('$(BattleTechGameDir)\Mods\LewdableTanks')">
+    <!-- flat dir -->
+    <LewdableTanksModPath>$(BattleTechGameDir)\Mods\LewdableTanks</LewdableTanksModPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(LewdableTanksModPath)' == ''">
+    <!-- sources dir -->
     <LewdableTanksModPath>$(SolutionDir)\..</LewdableTanksModPath>
   </PropertyGroup>
   <PropertyGroup>
