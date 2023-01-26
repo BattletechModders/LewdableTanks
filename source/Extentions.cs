@@ -12,16 +12,27 @@ namespace LewdableTanks
     {
         public static bool IsVehicle(this MechDef mech)
         {
-            if (mech == null || mech.MechTags == null)
+            if (mech == null)
+            {
                 return false;
-            return mech.Chassis.ChassisTags.Contains(Control.Instance.Settings.FakeVehicleTag);
+            }
+
+            if (mech.MechTags != null && mech.MechTags.Contains("fake_vehicle"))
+            {
+                return true;
+            }
+
+            return IsVehicle(mech.Chassis);
         }
 
         public static bool IsVehicle(this ChassisDef chassis)
         {
-            if (chassis == null || chassis.ChassisTags == null)
+            if (chassis == null)
+            {
                 return false;
-            return chassis.ChassisTags.Contains(Control.Instance.Settings.FakeVehicleTag);
+            }
+
+            return chassis.ChassisTags != null && chassis.ChassisTags.Contains("fake_vehicle_chassis");
         }
 
         public static void FixVehicleCost(List<MechDef> mechdefs, SimGameState simgame)

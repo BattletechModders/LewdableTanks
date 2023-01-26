@@ -42,7 +42,6 @@ namespace LewdableTanks
         public DInfo DebugInfo { get; set; } = DInfo.ALL | DInfo.Debug;
         public bool ShowSettingsOnLoad { get; set; } = true;
 
-        public string FakeVehicleTag { get; set; } = "fake_vehicle_chassis";
         public PlayerVehicleAction LostVehicleAction { get; set; } = PlayerVehicleAction.Salvage;
         public float ModuleRecoveryChance { get; set; } = 0.5f;
         public bool FixMechPartCost { get; set; } = true;
