@@ -31,10 +31,13 @@
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(LewdableTanksModPath)" />
   </Target>
   <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.3.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="0Harmony">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="Assembly-CSharp" Publicize="true">
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">

@@ -18,9 +18,7 @@ namespace LewdableTanks.Patches
             __result = false;
             if (__instance.GetItemCount(mid, "MECHPART", SimGameState.ItemCountType.UNDAMAGED_ONLY) > 0)
             {
-                var sim = new Traverse(__instance);
-                sim.Method("RemoveItemStat", new Type[] {typeof(string), typeof(string), typeof(bool)},
-                        new object[] {mid, "MECHPART", false}).GetValue();
+                __instance.RemoveItemStat(mid, "MECHPART", false);
                 __result = true;
                 if (pay)
                 {

@@ -52,7 +52,7 @@ namespace LewdableTanks
                 }
                 catch (Exception)
                 {
-                    Settings = new Settings();
+                    Settings = new();
                 }
 
                 if (!Settings.AddLogPrefix)
@@ -70,11 +70,11 @@ namespace LewdableTanks
                 CustomComponents.Registry.RegisterSimpleCustomComponents(Assembly.GetExecutingAssembly());
 
                 if (Settings.FixMechPartCost)
-                    CustomComponents.AutoFixer.Shared.RegisterMechFixer(Extentions.FixVehicleCost);
+                    CustomComponents.MechDefProcessing.Instance.Register(new VehicleCostFixer());
                 if (Settings.FixUIName)
-                    CustomComponents.AutoFixer.Shared.RegisterMechFixer(Extentions.FixVehicleUIName);
+                    CustomComponents.MechDefProcessing.Instance.Register(new VehicleUINameFixer());
                 if (Settings.AddWeaponToDescription)
-                    CustomComponents.AutoFixer.Shared.RegisterMechFixer(Extentions.FixDescription);
+                    CustomComponents.MechDefProcessing.Instance.Register(new VehicleDescriptionFixer());
 
                 Logger.LogDebug("done");
 

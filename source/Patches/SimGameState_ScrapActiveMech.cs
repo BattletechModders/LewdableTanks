@@ -16,7 +16,7 @@ namespace LewdableTanks.Patches
             if (def == null || (baySlot > 0 && !__instance.ActiveMechs.ContainsKey(baySlot)))
                 return false;
 
-            var locations = new Traverse(def).Field< LocationLoadoutDef[]> ("Locations").Value;
+            var locations = def.Locations;
 
             Control.Instance.LogDebug(DInfo.Debug, "Scrapping {0}", def.Description.Id);
             foreach (var location in locations)
