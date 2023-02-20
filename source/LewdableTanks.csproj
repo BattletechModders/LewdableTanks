@@ -1,110 +1,108 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup Condition="'$(LewdableTanksModPath)' == '' And Exists('$(BattleTechGameDir)\Mods\Core\LewdableTanks')">
-    <!-- RogueTech -->
-    <LewdableTanksModPath>$(BattleTechGameDir)\Mods\Core\LewdableTanks</LewdableTanksModPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(LewdableTanksModPath)' == '' And Exists('$(BattleTechGameDir)\Mods\LewdableTanks')">
-    <!-- flat dir -->
-    <LewdableTanksModPath>$(BattleTechGameDir)\Mods\LewdableTanks</LewdableTanksModPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(LewdableTanksModPath)' == ''">
-    <!-- sources dir -->
-    <LewdableTanksModPath>$(SolutionDir)\..</LewdableTanksModPath>
-  </PropertyGroup>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: D:\Games\BATTLETECH\ModingProjects\LewdableTanks\Current\LewdableTanks.dll-->
   <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9F64E87C-A6BC-4182-890C-6F9A8F99C23F}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <TargetFramework>net472</TargetFramework>
-    <LangVersion>preview</LangVersion>
-    <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblySearchPaths>
-      $(ReferencePath);
-      $(BattleTechGameDir)\BattleTech_Data\Managed\;
-      {HintPathFromItem}
-    </AssemblySearchPaths>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-    <Nullable>disable</Nullable>
+    <AssemblyName>LewdableTanks</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ApplicationVersion>1.0.0.1</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>LewdableTanks</RootNamespace>
   </PropertyGroup>
-  <Target Name="CopyFilesToGame" AfterTargets="CopyFilesToOutputDirectory">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(LewdableTanksModPath)" />
-  </Target>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CCDEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <Private>False</Private>
+      <HintPath>$(BattleTechGameDir)\BattleTech_Data\Managed\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp" Publicize="true">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(BattleTechGameDir)\Mods\.modtek\AssembliesInjected\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CustomComponents">
-      <HintPath>$(LewdableTanksModPath)\..\CustomComponents\CustomComponents.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>$(BattleTechGameDir)\Mods\Core\CustomComponents\CustomComponents.dll</HintPath>
     </Reference>
     <Reference Include="CustomSalvage">
-      <HintPath>$(LewdableTanksModPath)\..\CustomSalvage\CustomSalvage.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>$(BattleTechGameDir)\Mods\Core\CustomSalvage\CustomSalvage.dll</HintPath>
     </Reference>
     <Reference Include="CustomShops">
-      <HintPath>$(LewdableTanksModPath)\..\CustomShops\CustomShops.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>$(BattleTechGameDir)\Mods\Core\CustomShops\CustomShops.dll</HintPath>
     </Reference>
     <Reference Include="CustomUnits">
-      <HintPath>$(LewdableTanksModPath)\..\CustomUnits\CustomUnits.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>$(BattleTechGameDir)\Mods\Core\CustomUnits\CustomUnits.dll</HintPath>
     </Reference>
-    <Reference Include="InControl">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Core">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Data">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="UnityEngine">
-      <Private>False</Private>
+      <HintPath>$(BattleTechGameDir)\BattleTech_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.JSONSerializeModule">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <Private>False</Private>
+      <HintPath>$(BattleTechGameDir)\BattleTech_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="5.10.1">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <Compile Include="Control.cs" />
+    <Compile Include="Extentions.cs" />
+    <Compile Include="DInfo.cs" />
+    <Compile Include="PlayerVehicleAction.cs" />
+    <Compile Include="PlayerVehicleRecoveryType.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="UIName.cs" />
+    <Compile Include="VAssemblyVariant.cs" />
+    <Compile Include="SortFix\AAR_SalvageChosen_SortBy_Name.cs" />
+    <Compile Include="SortFix\ListElementController_SalvageMechPart_NotListView_.cs" />
+    <Compile Include="Patches\ChassisHandler_GetMechInfo.cs" />
+    <Compile Include="Patches\ChassisHandler_GetMechType.cs" />
+    <Compile Include="Patches\ChassisHandler_GetPrefabId.cs" />
+    <Compile Include="Patches\Contract_CompleteContract.cs" />
+    <Compile Include="Patches\Contract_GenerateSalvage_ProccessPlayerMech.cs" />
+    <Compile Include="Patches\ChassisHandler_GetMDefFromCDef.cs" />
+    <Compile Include="Patches\Control_GetMDefFromCDef.cs" />
+    <Compile Include="Patches\ChassisHandler_MakeMech.cs" />
+    <Compile Include="Patches\GenerateSalvage_AddVechicleToSalvage.cs" />
+    <Compile Include="Patches\MechBayChassisUnitElement_SetData_GetMechTags.cs" />
+    <Compile Include="Patches\MechBayMechInfoWidget_OnUnreadyClicked_Prefix.cs" />
+    <Compile Include="Patches\MechBayPanel_Init.cs" />
+    <Compile Include="Patches\MechBayPanel_OnReadyMech.cs" />
+    <Compile Include="Patches\ShopDefItem_ToSalvageDef.cs" />
+    <Compile Include="Patches\SH_Shop_Screen_AddShopItemToWidget.cs" />
+    <Compile Include="Patches\SimGameState_ScrapActiveMech.cs" />
+    <Compile Include="Patches\SimGameState_ScrapInactiveMech.cs" />
+    <Compile Include="Patches\SimGameState_ScrapMechPart.cs" />
+    <Compile Include="Patches\SimGameState_UnreadyMech.cs" />
+    <Compile Include="Patches\GenerateSalvage_AddMechToSalvage_asVehicle.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="VehicleCostFixer.cs" />
+    <Compile Include="VehicleDescriptionFixer.cs" />
+    <Compile Include="VehicleUINameFixer.cs" />
   </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BattleTechGameDir)\Mods\Core\LewdableTanks" Condition="'$(BattleTechGameDir)' != '' And Exists('$(BattleTechGameDir)\Mods\Core\LewdableTanks')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BattleTechGameDir)\Mods_CBDE\Core\LewdableTanks" Condition="'$(BattleTechGameDir)' != '' And Exists('$(BattleTechGameDir)\Mods_CBDE\Core\LewdableTanks')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(RogueTechRepo)\Core\LewdableTanks" Condition="'$(RogueTechRepo)' != '' And Exists('$(RogueTechRepo)\Core\LewdableTanks')" />
+  </Target>
 </Project>

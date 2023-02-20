@@ -3,24 +3,20 @@ using Harmony;
 
 namespace LewdableTanks.Patches
 {
+  [HarmonyPatch(typeof (MechBayMechInfoWidget_OnUnreadyClicked))]
+  [HarmonyPatch("Prefix")]
+  public static class MechBayMechInfoWidget_OnUnreadyClicked_Prefix
+  {
+    public static bool allowedit;
 
-    [HarmonyPatch(typeof(MechBayMechInfoWidget_OnUnreadyClicked))]
-    [HarmonyPatch("Prefix")]
-    public static class MechBayMechInfoWidget_OnUnreadyClicked_Prefix
+    [HarmonyPrefix]
+    public static void CancelUnready()
     {
-        public static bool allowedit;
-
-        [HarmonyPrefix]
-        public static void CancelUnready()
-        {
-            allowedit = Core.Settings.AllowVehiclesEdit;
-            Core.Settings.AllowVehiclesEdit = true;
-        }
-
-        [HarmonyPostfix]
-        public static void Rollback()
-        {
-            Core.Settings.AllowVehiclesEdit = allowedit;
-        }
+      MechBayMechInfoWidget_OnUnreadyClicked_Prefix.allowedit = Core.Settings.AllowVehiclesEdit;
+      Core.Settings.AllowVehiclesEdit = true;
     }
+
+    [HarmonyPostfix]
+    public static void Rollback() => Core.Settings.AllowVehiclesEdit = MechBayMechInfoWidget_OnUnreadyClicked_Prefix.allowedit;
+  }
 }

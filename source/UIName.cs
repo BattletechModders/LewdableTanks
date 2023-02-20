@@ -2,9 +2,9 @@
 
 namespace LewdableTanks
 {
-    [CustomComponent("UIName")]
-    public class UIName
-    {
-        public string N { get; set; } = null;
-    }
+  [CustomComponent("UIName")]
+  public class UIName
+  {
+    public string N { get; set; } = (string) null;
+  }
 }

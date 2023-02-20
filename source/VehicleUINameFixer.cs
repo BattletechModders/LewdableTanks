@@ -1,31 +1,20 @@
-using System.Collections.Generic;
+﻿
 using BattleTech;
 using CustomComponents;
+using System.Collections.Generic;
 
-namespace LewdableTanks;
-
-internal class VehicleUINameFixer : IMechDefProcessor
-{
-    public void ProcessMechDefs(List<MechDef> mechDefs)
-    {
-        foreach (var mechDef in mechDefs)
-        {
-            if (!string.IsNullOrEmpty(mechDef.Description.UIName))
-                continue;
-
-            if (!mechDef.IsVehicle())
-            {
-                continue;
-            }
-
-            var v = mechDef.dataManager.VehicleDefs.Get(mechDef.Description.Id);
-
-            var name = (v.Chassis.Is<UIName>(out var uiName) && !string.IsNullOrEmpty(uiName.N))
-                ? uiName.N
-                : v.Description.Name;
-
-            mechDef.Description.UIName = name;
-            mechDef.Chassis.Description.UIName = name;
+namespace LewdableTanks {
+  internal class VehicleUINameFixer : IMechDefProcessor {
+    public void ProcessMechDefs(List<MechDef> mechDefs) {
+      foreach (MechDef mechDef in mechDefs) {
+        if (string.IsNullOrEmpty(mechDef.Description.UIName) && mechDef.IsVehicle()) {
+          VehicleDef vehicleDef = mechDef.dataManager.VehicleDefs.Get(mechDef.Description.Id);
+          UIName res;
+          string str = !vehicleDef.Chassis.Is<UIName>(out res) || string.IsNullOrEmpty(res.N) ? vehicleDef.Description.Name : res.N;
+          mechDef.Description.UIName = str;
+          mechDef.Chassis.Description.UIName = str;
         }
+      }
     }
+  }
 }
