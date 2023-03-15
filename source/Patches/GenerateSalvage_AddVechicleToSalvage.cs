@@ -19,7 +19,7 @@ namespace LewdableTanks.Patches
                 var vdef = vechicle.VehicleDef;
                 if (vdef == null)
                 {
-                    Control.Instance.LogError("No vehicledef for salvage");
+                    Log.Main.Error?.Log("No vehicledef for salvage");
                 }
 
                 if (simgame.DataManager.MechDefs.TryGet(vid, out var mech))
@@ -27,7 +27,7 @@ namespace LewdableTanks.Patches
                     if (!string.IsNullOrEmpty(Control.Instance.Settings.NoVehiclePartsTag))
                         if (vechicle.VehicleDef.VehicleTags.Contains(Control.Instance.Settings.NoVehiclePartsTag))
                         {
-                            Control.Instance.LogDebug(DInfo.Salvage, "Salvaging {0} - no parts by tags", vid);
+                            Log.Main.Debug?.Log($"Salvaging {vid} - no parts by tags");
                             return;
                         }
 
@@ -38,17 +38,16 @@ namespace LewdableTanks.Patches
                     var current = vechicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vechicle.SummaryStructureCurrent;
 
                     var parts = Mathf.Clamp(Mathf.CeilToInt(current / total * max_parts), min_parts, max_parts);
-                    Control.Instance.LogDebug(DInfo.Salvage, "Salvaging {0} - hp: {1:0.0}/{2:0.0} parts:{3}", vid,
-                        current, total, parts);
+                    Log.Main.Debug?.Log($"Salvaging {vid} - hp: {current:0.0}/{total:0.0} parts:{parts}");
 
                     contract.AddMechPartsToPotentialSalvage(simgame.Constants, mech, parts);
                 }
                 else
-                    Control.Instance.LogError($"Cannot find fake mech for {vid}");
+                    Log.Main.Error?.Log($"Cannot find fake mech for {vid}");
             }
             catch (Exception e)
             {
-                Control.Instance.LogError("Error in Generate vehicle salvage: ", e);
+                Log.Main.Error?.Log("Error in Generate vehicle salvage: ", e);
             }
         }
     }

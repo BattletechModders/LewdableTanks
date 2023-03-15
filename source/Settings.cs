@@ -38,8 +38,6 @@ namespace LewdableTanks
 
     public class Settings
     {
-        public bool AddLogPrefix { get; set; } = true;
-        public DInfo DebugInfo { get; set; } = DInfo.ALL | DInfo.Debug;
         public bool ShowSettingsOnLoad { get; set; } = true;
 
         public PlayerVehicleAction LostVehicleAction { get; set; } = PlayerVehicleAction.Salvage;

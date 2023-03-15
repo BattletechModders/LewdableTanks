@@ -12,22 +12,22 @@ namespace LewdableTanks.Patches
         {
             var sim = __instance.Sim;
 
-            if (!Control.Instance.Settings.DebugInfo.HasFlag(DInfo.Debug))
+            if (Log.Main.Trace != null)
                 return;
 
 
-            Control.Instance.LogDebug(DInfo.Debug, "Player Mech:");
+            Log.Main.Trace?.Log("Player Mech:");
             foreach (var mech in sim.ActiveMechs)
             {
-                Control.Instance.LogDebug(DInfo.Debug, "-- {0:00}[{3}]:{1}/{2}", mech.Key,
-                    mech.Value.Description.Id, mech.Value.Chassis?.Description.Id, mech.Value.GUID);
+                Log.Main.Trace?.Log(
+                    $"-- {mech.Key:00}[{mech.Value.GUID}]:{mech.Value.Description.Id}/{mech.Value.Chassis?.Description.Id}");
             }
-            Control.Instance.LogDebug(DInfo.Debug, "Stored Mech:");
+            Log.Main.Trace?.Log("Stored Mech:");
             foreach (var mech in sim.GetAllInventoryMechDefs())
             {
-                Control.Instance.LogDebug(DInfo.Debug, "-- {0} ", mech.Description.Id);
+                Log.Main.Trace?.Log($"-- {mech.Description.Id} ");
                 //foreach (var tag in mech.ChassisTags)
-                //    Control.Instance.LogDebug(DInfo.Debug, "-- -C:{0}", tag );
+                //    Log.Main.Trace?.Log("-- -C:{0}", tag );
             }
         }
     }

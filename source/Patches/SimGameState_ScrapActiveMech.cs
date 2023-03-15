@@ -18,10 +18,10 @@ namespace LewdableTanks.Patches
 
             var locations = def.Locations;
 
-            Control.Instance.LogDebug(DInfo.Debug, "Scrapping {0}", def.Description.Id);
+            Log.Main.Trace?.Log($"Scrapping {def.Description.Id}");
             foreach (var location in locations)
             {
-                Control.Instance.LogDebug(DInfo.Debug, "-- {0} - {1}", location.Location, location.DamageLevel);
+                Log.Main.Trace?.Log($"-- {location.Location} - {location.DamageLevel}");
             }
 
             if (__instance.ActiveMechs.ContainsKey(baySlot))

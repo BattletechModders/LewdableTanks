@@ -20,7 +20,7 @@ namespace LewdableTanks.Patches
             var mech = dm.VehicleDefs.Get(mid);
             if (mech == null)
             { 
-                Control.Instance.LogError("Cannot find vehicle with id " + mid);
+                Log.Main.Error?.Log("Cannot find vehicle with id " + mid);
                 return true;
             }
 

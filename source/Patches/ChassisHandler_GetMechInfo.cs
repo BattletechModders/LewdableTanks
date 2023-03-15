@@ -66,11 +66,16 @@ namespace LewdableTanks.Patches
                 if (assembly.PartsMin >= 0)
                     __result.MinParts = Mathf.CeilToInt(max_parts * assembly.PartsMin);
             }
-            Control.Instance.LogDebug(DInfo.Assembly, "GetVehicle info for {0}", vehicle.Chassis.Description.Id);
+
+            Log.Main.Debug?.Log($"GetVehicle info for {vehicle.Chassis.Description.Id}");
             if (assembly != null)
-                Control.Instance.LogDebug(DInfo.Assembly, "-- " + assembly.ToString());
+            {
+                Log.Main.Debug?.Log("-- " + assembly);
+            }
             else
-                Control.Instance.LogDebug(DInfo.Assembly, "-- VAssemblyVariant null, PID:", vehicle.Chassis.PrefabIdentifier);
+            {
+                Log.Main.Debug?.Log($"-- VAssemblyVariant null, PID: {vehicle.Chassis.PrefabIdentifier}");
+            }
 
             __result.PrefabID = ChassisHandler.GetPrefabId(mech);
 

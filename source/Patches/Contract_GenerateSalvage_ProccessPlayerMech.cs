@@ -17,7 +17,7 @@ namespace LewdableTanks.Patches
             var mech = unitResult.mech;
             if (Control.Instance.Settings.LostVehicleAction == PlayerVehicleAction.None)
             {
-                Control.Instance.LogDebug(DInfo.Salvage, $"- None action for player vehicle, skipping");
+                Log.Main.Debug?.Log($"- None action for player vehicle, skipping");
                 return true;
             }
 
@@ -25,7 +25,7 @@ namespace LewdableTanks.Patches
 
             if (!original.IsVehicle())
             {
-                Control.Instance.LogDebug(DInfo.Salvage, $"- {mech.Description.Id} with GUID {mech.GUID} is not vehicle, return to mech process");
+                Log.Main.Debug?.Log($"- {mech.Description.Id} with GUID {mech.GUID} is not vehicle, return to mech process");
                 return true;
             }
 
@@ -44,7 +44,7 @@ namespace LewdableTanks.Patches
             //    Control.Instance.LogDebug(DInfo.Salvage, "{0}/{5}({3}/{6}): {2}[{1}] - {4}", actor.GUID, actor.Description.Id, actor.DisplayName, actor.UnitType, actor.DeathMethod, unit_guid, actor.Type.ToString());
             //}
 
-            Control.Instance.LogDebug(DInfo.Salvage, "-- vehicles:");
+            Log.Main.Debug?.Log("-- vehicles:");
             Vehicle vehicle = null;
             foreach (var v in Contract.Contract.BattleTechGame.Combat.AllActors.OfType<Vehicle>())
             {
@@ -58,7 +58,7 @@ namespace LewdableTanks.Patches
 
             if (vehicle == null)
             {
-                Control.Instance.LogError($"Vehicle {mech.Description.Id} with GUID {mech.GUID} not found, return vehicle to player fallback");
+                Log.Main.Error?.Log($"Vehicle {mech.Description.Id} with GUID {mech.GUID} not found, return vehicle to player fallback");
                 unitResult.mechLost = false;
                 return false;
             }
@@ -88,7 +88,8 @@ namespace LewdableTanks.Patches
 
        private static bool IsDead(this Vehicle vehicle)
         {
-            Control.Instance.LogDebug(DInfo.Death, "Check Death for {0}, deathmethod: {1}", vehicle.VehicleDef.Description.Id, vehicle.DeathMethod);
+            Log.Main.Debug?.Log(
+                $"Check Death for {vehicle.VehicleDef.Description.Id}, deathmethod: {vehicle.DeathMethod}");
 
             //if (vehicle.VehicleDef.Chassis.HasTurret)
             //    if (vehicle.GetLocationDamageLevel(VehicleChassisLocations.Turret) == LocationDamageLevel.Destroyed)
@@ -132,17 +133,18 @@ namespace LewdableTanks.Patches
             switch (Control.Instance.Settings.Recovery)
             {
                 case PlayerVehicleRecoveryType.AlwaysRecovery:
-                    Control.Instance.LogDebug(DInfo.Salvage, " --- no recovery");
+                    Log.Main.Debug?.Log(" --- no recovery");
 
                     return true;
                 case PlayerVehicleRecoveryType.NoRecovery:
-                    Control.Instance.LogDebug(DInfo.Salvage, " --- allways recovery");
+                    Log.Main.Debug?.Log(" --- allways recovery");
                     return false;
 
                 case PlayerVehicleRecoveryType.SimGameConstant:
                     var chance = CustomShops.Control.State.Sim.Constants.Salvage.DestroyedMechRecoveryChance + Control.Instance.Settings.RecoveryChanceConstantMod;
                     var rnd = CustomShops.Control.State.Sim.NetworkRandom.Float();
-                    Control.Instance.LogDebug(DInfo.Salvage, " --- chance:{0:0.00} roll:{1:0.00}, {2}", chance, rnd, (rnd < chance ? "recovered" : "failed"));
+                    Log.Main.Debug?.Log(
+                        $" --- chance:{chance:0.00} roll:{rnd:0.00}, {(rnd < chance ? "recovered" : "failed")}");
                     return rnd < chance;
 
                 case PlayerVehicleRecoveryType.HpLeft:
@@ -150,7 +152,8 @@ namespace LewdableTanks.Patches
                     var current = vehicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureCurrent;
                     var max = (current / total) * Control.Instance.Settings.RecoveryChanceHPMod + Control.Instance.Settings.RecoveryChanceHPBase ;
                     var roll = CustomShops.Control.State.Sim.NetworkRandom.Float();
-                    Control.Instance.LogDebug(DInfo.Salvage, " --- chance:{0:0.00} roll:{1:0.00}, {2}", max, roll, (roll < max ? "recovered" : "failed"));
+                    Log.Main.Debug?.Log(
+                        $" --- chance:{max:0.00} roll:{roll:0.00}, {(roll < max ? "recovered" : "failed")}");
                     return roll < max;
                 case PlayerVehicleRecoveryType.HpLeftConstant:
                     var totalhp = vehicle.SummaryArmorMax * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureMax;
@@ -161,7 +164,8 @@ namespace LewdableTanks.Patches
                     var tchance = bchance + maxhp;
 
                     var r = CustomShops.Control.State.Sim.NetworkRandom.Float();
-                    Control.Instance.LogDebug(DInfo.Salvage, " --- chance:{0:0.00} roll:{1:0.00}, base:{2:0.00}, Hp:{3:0.00} {4}", tchance, r, bchance, maxhp, (r < tchance ? "recovered" : "failed"));
+                    Log.Main.Debug?.Log(
+                        $" --- chance:{tchance:0.00} roll:{r:0.00}, base:{bchance:0.00}, Hp:{maxhp:0.00} {(r < tchance ? "recovered" : "failed")}");
                     return r < tchance;
             }
             return false;
@@ -177,8 +181,7 @@ namespace LewdableTanks.Patches
             var current = vehicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureCurrent;
 
             var parts = Mathf.Clamp(Mathf.CeilToInt(current / total * max_parts), min_parts, max_parts);
-            Control.Instance.LogDebug(DInfo.Salvage, "-- hp: {0:0.0}/{1:0.0} parts:{2}",
-                current, total, parts);
+            Log.Main.Debug?.Log($"-- hp: {current:0.0}/{total:0.0} parts:{parts}");
             return parts;
         }
 
@@ -189,7 +192,7 @@ namespace LewdableTanks.Patches
 
             if (vdef == null)
             {
-                Control.Instance.LogError("No vehicledef for return");
+                Log.Main.Error?.Log("No vehicledef for return");
             }
 
             ReturnParts(contract, vehicle, mech);
@@ -202,19 +205,18 @@ namespace LewdableTanks.Patches
                 {
                     if (rnd < chance)
                     {
-
-                        Control.Instance.LogDebug(DInfo.Salvage, "-- {1:0.00}<{2:0.00}, recovered {0}", component.ComponentDefID, rnd, chance);
+                        Log.Main.Debug?.Log($"-- {rnd:0.00}<{chance:0.00}, recovered {component.ComponentDefID}");
                         contract.AddComponentToFinalSalvage(component.Def);
                     }
                     else
                     {
-                        Control.Instance.LogDebug(DInfo.Salvage, "-- {1:0.00}>{2:0.00}, destroyed {0}", component.ComponentDefID, rnd, chance);
+                        Log.Main.Debug?.Log($"-- {rnd:0.00}>{chance:0.00}, destroyed {component.ComponentDefID}");
                     }
 
                 }
                 else
                 {
-                    Control.Instance.LogDebug(DInfo.Salvage, "-- {0}, DESTROYED", component.ComponentDefID);
+                    Log.Main.Debug?.Log($"-- {component.ComponentDefID}, DESTROYED");
                 }
             }
         }
@@ -227,7 +229,7 @@ namespace LewdableTanks.Patches
 
             if (vdef == null)
             {
-                Control.Instance.LogError("No vehicledef for return");
+                Log.Main.Error?.Log("No vehicledef for return");
             }
 
             SalvageParts(contract, vehicle, mech);
@@ -242,19 +244,18 @@ namespace LewdableTanks.Patches
                 {
                     if (rnd < chance)
                     {
-
-                        Control.Instance.LogDebug(DInfo.Salvage, "-- {1:0.00}<{2:0.00}, recovered {0}", component.ComponentDefID, rnd, chance);
+                        Log.Main.Debug?.Log($"-- {rnd:0.00}<{chance:0.00}, recovered {component.ComponentDefID}");
                         contract.AddComponentToPotentialSalvage(component.Def, component.DamageLevel, false);
                     }
                     else
                     {
-                        Control.Instance.LogDebug(DInfo.Salvage, "-- {1:0.00}>{2:0.00}, destroyed {0}", component.ComponentDefID, rnd, chance);
+                        Log.Main.Debug?.Log($"-- {rnd:0.00}>{chance:0.00}, destroyed {component.ComponentDefID}");
                     }
 
                 }
                 else
                 {
-                    Control.Instance.LogDebug(DInfo.Salvage, "-- {0}, DESTROYED", component.ComponentDefID);
+                    Log.Main.Debug?.Log($"-- {component.ComponentDefID}, DESTROYED");
                 }
             }
         }
@@ -264,7 +265,7 @@ namespace LewdableTanks.Patches
             if(!string.IsNullOrEmpty(Control.Instance.Settings.NoVehiclePartsTag))
                 if (vehicle.VehicleDef.VehicleTags.Contains(Control.Instance.Settings.NoVehiclePartsTag))
                 {
-                    Control.Instance.LogDebug(DInfo.Salvage, "Returning {0} - no parts by tags", mech.Description.Id);
+                    Log.Main.Debug?.Log($"Returning {mech.Description.Id} - no parts by tags");
                     return;
                 }
 
@@ -280,7 +281,7 @@ namespace LewdableTanks.Patches
             if (!string.IsNullOrEmpty(Control.Instance.Settings.NoVehiclePartsTag))
                 if (vehicle.VehicleDef.VehicleTags.Contains(Control.Instance.Settings.NoVehiclePartsTag))
                 {
-                    Control.Instance.LogDebug(DInfo.Salvage, "Salvaging {0} - no parts by tags", mech.Description.Id);
+                    Log.Main.Debug?.Log($"Salvaging {mech.Description.Id} - no parts by tags");
                     return;
                 }
 

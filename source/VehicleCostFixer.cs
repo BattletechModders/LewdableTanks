@@ -17,8 +17,7 @@ internal class VehicleCostFixer : IMechDefProcessor
                 continue;
             }
             mechDef.simGameMechPartCost = (int)(mechDef.Description.Cost / 5 * k);
-            Control.Instance.LogDebug(DInfo.AutoFix, "Fixing cost of {0} set to {1}", mechDef.Description.Id,
-                mechDef.SimGameMechPartCost);
+            Log.Main.Debug?.Log($"Fixing cost of {mechDef.Description.Id} set to {mechDef.SimGameMechPartCost}");
         }
     }
 }

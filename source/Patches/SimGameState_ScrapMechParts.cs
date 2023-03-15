@@ -13,7 +13,7 @@ namespace LewdableTanks.Patches
             SimGameState __instance, ref bool __result)
         {
             var mid = CustomSalvage.ChassisHandler.GetMDefFromCDef(id);
-            Control.Instance.LogDebug(DInfo.General, "Scrapping {2}x{0}/{1}", id, mid, partCount);
+            Log.Main.Debug?.Log($"Scrapping {partCount}x{id}/{mid}");
             __result = false;
             if (__instance.GetItemCount(mid, "MECHPART", SimGameState.ItemCountType.UNDAMAGED_ONLY) > 0)
             {

@@ -43,7 +43,7 @@ namespace LewdableTanks.Patches
 
                 if (baySlot < 0)
                 {
-                    Control.Instance.LogDebug(DInfo.General, "No Free vehicle slots for {0}", id);
+                    Log.Main.Debug?.Log($"No Free vehicle slots for {id}");
                     return false;
                 }
 
@@ -55,7 +55,7 @@ namespace LewdableTanks.Patches
                 
                 
                 WorkOrderEntry_ReadyMech workOrderEntry_ReadyMech = new WorkOrderEntry_ReadyMech(
-                    string.Format("ReadyMech-{0}", sim_id), Strings.T("Readying 'Mech - {0}", new object[]
+                    $"ReadyMech-{sim_id}", Strings.T("Readying 'Mech - {0}", new object[]
                     {
                         chassisDef.Description.Name
                     }), sim.Constants.Story.MechReadyTime, baySlot, mech, Strings.T(
@@ -83,7 +83,7 @@ namespace LewdableTanks.Patches
             }
             catch (Exception e)
             {
-                Control.Instance.LogError(e);
+                Log.Main.Error?.Log(e);
             }
 
             return false;

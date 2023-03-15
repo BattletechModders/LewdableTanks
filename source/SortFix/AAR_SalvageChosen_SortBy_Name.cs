@@ -15,18 +15,18 @@ namespace LewdableTanks.SortFix
             {
                 var i = Control.Instance;
 
-                i.LogDebug(DInfo.Sort, "SORT:");
-                i.LogDebug(DInfo.Sort, "- a: {0}", a == null);
+                Log.Main.Debug?.Log("SORT:");
+                Log.Main.Debug?.Log($"- a: {a == null}");
 
-                i.LogDebug(DInfo.Sort, "-- a.controler:{0} a.salvageDef:{1}", a.controller == null, a.controller?.salvageDef);
-                i.LogDebug(DInfo.Sort, "-- a.GetId:{0}", a.controller.GetId());
-                i.LogDebug(DInfo.Sort, "-- a.GetName:{0}", a.controller.GetName());
+                Log.Main.Debug?.Log($"-- a.controler:{a.controller == null} a.salvageDef:{a.controller?.salvageDef}");
+                Log.Main.Debug?.Log($"-- a.GetId:{a.controller.GetId()}");
+                Log.Main.Debug?.Log($"-- a.GetName:{a.controller.GetName()}");
 
-                i.LogDebug(DInfo.Sort, "- b: {0}", a == null);
+                Log.Main.Debug?.Log($"- b: {a == null}");
 
-                i.LogDebug(DInfo.Sort, "-- b.controler:{0} b.salvageDef:{1}", b.controller == null, b.controller?.salvageDef);
-                i.LogDebug(DInfo.Sort, "-- b.GetId:{0}", b.controller.GetId());
-                i.LogDebug(DInfo.Sort, "-- b.GetName:{0}", b.controller.GetName());
+                Log.Main.Debug?.Log($"-- b.controler:{b.controller == null} b.salvageDef:{b.controller?.salvageDef}");
+                Log.Main.Debug?.Log($"-- b.GetId:{b.controller.GetId()}");
+                Log.Main.Debug?.Log($"-- b.GetName:{b.controller.GetName()}");
 
             }
             catch (Exception e)
