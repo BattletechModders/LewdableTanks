@@ -29,27 +29,11 @@ namespace LewdableTanks.Patches
                 return true;
             }
 
-
-            //Control.Instance.LogDebug(DInfo.Salvage, "Found vehicle {0}, guid:[{1}]", mech.Description.Id, mech.GUID);
-            //Control.Instance.LogDebug(DInfo.Salvage, "-- all units:");
-            //foreach (var actor in Contract.Contract.BattleTechGame.Combat.AllActors)
-            //{
-            //    string unit_guid = "";
-            //    if (actor is Vehicle v)
-            //        unit_guid = v.VehicleDef.GUID;
-            //    else if (actor is Mech m)
-            //        unit_guid = m.MechDef.GUID;
-
-
-            //    Control.Instance.LogDebug(DInfo.Salvage, "{0}/{5}({3}/{6}): {2}[{1}] - {4}", actor.GUID, actor.Description.Id, actor.DisplayName, actor.UnitType, actor.DeathMethod, unit_guid, actor.Type.ToString());
-            //}
-
             Log.Main.Debug?.Log("-- vehicles:");
-            Vehicle vehicle = null;
-            foreach (var v in Contract.Contract.BattleTechGame.Combat.AllActors.OfType<Vehicle>())
+            Mech vehicle = null;
+            foreach (var v in Contract.Contract.BattleTechGame.Combat.AllActors.OfType<Mech>())
             {
-                //Control.Instance.LogDebug(DInfo.Salvage, "{0}/{5}({3}/{6}): {2}[{1}] - {4}", v.GUID, v.Description.Id, v.DisplayName, v.UnitType, v.DeathMethod, v.VehicleDef.GUID, v.Type.ToString());
-                if (v.VehicleDef.GUID == mech.GUID)
+                if (v.PilotableActorDef.GUID == mech.GUID)
                 {
                     vehicle = v;
                     break;
@@ -63,22 +47,22 @@ namespace LewdableTanks.Patches
                 return false;
             }
 
-            unitResult.mechLost = !CanRecover(vehicle);
+            unitResult.mechLost = !CanRecoverVehicle(vehicle);
             if (unitResult.mechLost)
             {
                 switch (Control.Instance.Settings.LostVehicleAction)
                 {
                     case PlayerVehicleAction.Salvage:
-                        SalvageVehicle(Contract, vehicle, mech);
+                        SalvageVehicle(Contract, vehicle, mech, false);
                         break;
                     case PlayerVehicleAction.Return:
-                        ReturnVehicle(Contract, vehicle, mech);
+                        SalvageVehicle(Contract, vehicle, mech, true);
                         break;
                     case PlayerVehicleAction.SalvageParts:
-                        SalvageParts(Contract, vehicle, mech);
+                        SalvageParts(Contract, vehicle, mech, false);
                         break;
                     case PlayerVehicleAction.ReturnParts:
-                        ReturnParts(Contract, vehicle, mech);
+                        SalvageParts(Contract, vehicle, mech, true);
                         break;
                 }
             }
@@ -86,58 +70,32 @@ namespace LewdableTanks.Patches
             return false;
         }
 
-       private static bool IsDead(this Vehicle vehicle)
+        private static bool IsDeadVehicle(this AbstractActor vehicle)
         {
-            Log.Main.Debug?.Log(
-                $"Check Death for {vehicle.VehicleDef.Description.Id}, deathmethod: {vehicle.DeathMethod}");
+            Log.Main.Debug?.Log($"Check Death for {vehicle.Description.Id}, deathmethod: {vehicle.DeathMethod}");
 
-            //if (vehicle.VehicleDef.Chassis.HasTurret)
-            //    if (vehicle.GetLocationDamageLevel(VehicleChassisLocations.Turret) == LocationDamageLevel.Destroyed)
-            //    {
-            //        Control.Instance.LogDebug(DInfo.Death, "- Turret destroyed");
-            //        return true;
-            //    }
-
-            //if (vehicle.GetLocationDamageLevel(VehicleChassisLocations.Front) == LocationDamageLevel.Destroyed)
-            //{
-            //    Control.Instance.LogDebug(DInfo.Death, "- Front destroyed");
-            //    return true;
-            //}
-            //if (vehicle.GetLocationDamageLevel(VehicleChassisLocations.Rear) == LocationDamageLevel.Destroyed)
-            //{
-            //    Control.Instance.LogDebug(DInfo.Death, "- Rear destroyed");
-            //    return true;
-            //}
-            //if (vehicle.GetLocationDamageLevel(VehicleChassisLocations.Left) == LocationDamageLevel.Destroyed)
-            //{
-            //    Control.Instance.LogDebug(DInfo.Death, "- Left destroyed");
-            //    return true;
-            //}
-            //if (vehicle.GetLocationDamageLevel(VehicleChassisLocations.Right) == LocationDamageLevel.Destroyed)
-            //{
-            //    Control.Instance.LogDebug(DInfo.Death, "- Right destroyed");
-            //    return true;
-            //}
-            //Control.Instance.LogDebug(DInfo.Death, "- Not dead");
-            var dm = vehicle.DeathMethod;
-
-            return dm != DeathMethod.NOT_SET && dm != DeathMethod.DespawnedEscaped &&
-                   dm != DeathMethod.DespawnedNoMessage;
+            return vehicle.DeathMethod switch
+            {
+                DeathMethod.NOT_SET => false,
+                DeathMethod.DespawnedEscaped => false,
+                DeathMethod.DespawnedNoMessage => false,
+                _ => true
+            };
         }
 
-        private static bool CanRecover(Vehicle vehicle)
+        private static bool CanRecoverVehicle(AbstractActor vehicle)
         {
-            if (!vehicle.IsDead())
+            if (!vehicle.IsDeadVehicle())
                 return true;
 
             switch (Control.Instance.Settings.Recovery)
             {
                 case PlayerVehicleRecoveryType.AlwaysRecovery:
-                    Log.Main.Debug?.Log(" --- no recovery");
+                    Log.Main.Debug?.Log(" --- allways recovery");
 
                     return true;
                 case PlayerVehicleRecoveryType.NoRecovery:
-                    Log.Main.Debug?.Log(" --- allways recovery");
+                    Log.Main.Debug?.Log(" --- no recovery");
                     return false;
 
                 case PlayerVehicleRecoveryType.SimGameConstant:
@@ -172,7 +130,7 @@ namespace LewdableTanks.Patches
         }
 
 
-        private static int NumParts(Vehicle vehicle, SimGameState simgame)
+        private static int NumParts(Mech vehicle, SimGameState simgame)
         {
             int min_parts = 1;
             int max_parts = simgame.Constants.Story.DefaultMechPartMax;
@@ -185,19 +143,18 @@ namespace LewdableTanks.Patches
             return parts;
         }
 
-        public static void ReturnVehicle(ContractHelper contract, Vehicle vehicle, MechDef mech)
+        private static void SalvageVehicle(ContractHelper contract, Mech vehicle, MechDef mech, bool isFinal)
         {
-            var vid = vehicle.VehicleDef.Description.Id;
-            var vdef = vehicle.VehicleDef;
-
+            var vdef = vehicle.MechDef;
             if (vdef == null)
             {
                 Log.Main.Error?.Log("No vehicledef for return");
             }
 
-            ReturnParts(contract, vehicle, mech);
+            SalvageParts(contract, vehicle, mech, isFinal);
+
             var chance = Control.Instance.Settings.ModuleRecoveryChance;
-            foreach (var component in vehicle.VehicleDef.Inventory)
+            foreach (var component in vehicle.MechDef.Inventory)
             {
                 var rnd = CustomShops.Control.State.Sim.NetworkRandom.Float();
 
@@ -206,7 +163,14 @@ namespace LewdableTanks.Patches
                     if (rnd < chance)
                     {
                         Log.Main.Debug?.Log($"-- {rnd:0.00}<{chance:0.00}, recovered {component.ComponentDefID}");
-                        contract.AddComponentToFinalSalvage(component.Def);
+                        if (isFinal)
+                        {
+                            contract.AddComponentToFinalSalvage(component.Def);
+                        }
+                        else
+                        {
+                            contract.AddComponentToPotentialSalvage(component.Def, component.DamageLevel, false);
+                        }
                     }
                     else
                     {
@@ -221,77 +185,25 @@ namespace LewdableTanks.Patches
             }
         }
 
-
-        public static void SalvageVehicle(ContractHelper contract, Vehicle vehicle, MechDef mech)
+        private static void SalvageParts(ContractHelper contract, Mech vehicle, MechDef mech, bool isFinal)
         {
-            var vid = vehicle.VehicleDef.Description.Id;
-            var vdef = vehicle.VehicleDef;
-
-            if (vdef == null)
+            if (vehicle.MechDef.IsNoVehicleParts() || vehicle.MechDef.IsNoSalvage())
             {
-                Log.Main.Error?.Log("No vehicledef for return");
+                Log.Main.Debug?.Log($"Returning {mech.Description.Id} - no parts by tags");
+                return;
             }
-
-            SalvageParts(contract, vehicle, mech);
-
-            var chance = Control.Instance.Settings.ModuleRecoveryChance;
-
-            foreach (var component in vehicle.VehicleDef.Inventory)
-            {
-                var rnd = CustomShops.Control.State.Sim.NetworkRandom.Float();
-
-                if (component.DamageLevel != ComponentDamageLevel.Destroyed)
-                {
-                    if (rnd < chance)
-                    {
-                        Log.Main.Debug?.Log($"-- {rnd:0.00}<{chance:0.00}, recovered {component.ComponentDefID}");
-                        contract.AddComponentToPotentialSalvage(component.Def, component.DamageLevel, false);
-                    }
-                    else
-                    {
-                        Log.Main.Debug?.Log($"-- {rnd:0.00}>{chance:0.00}, destroyed {component.ComponentDefID}");
-                    }
-
-                }
-                else
-                {
-                    Log.Main.Debug?.Log($"-- {component.ComponentDefID}, DESTROYED");
-                }
-            }
-        }
-
-        private static void ReturnParts(ContractHelper contract, Vehicle vehicle, MechDef mech)
-        {
-            if(!string.IsNullOrEmpty(Control.Instance.Settings.NoVehiclePartsTag))
-                if (vehicle.VehicleDef.VehicleTags.Contains(Control.Instance.Settings.NoVehiclePartsTag))
-                {
-                    Log.Main.Debug?.Log($"Returning {mech.Description.Id} - no parts by tags");
-                    return;
-                }
 
             var simgame = contract.Contract.BattleTechGame.Simulation;
             var parts = NumParts(vehicle, simgame);
 
-            if (string.IsNullOrEmpty(CustomSalvage.Control.Instance.Settings.NoSalvageVehicleTag) || !vehicle.VehicleDef.VehicleTags.Contains(CustomSalvage.Control.Instance.Settings.NoSalvageVehicleTag))
+            if (isFinal)
+            {
                 contract.AddMechPartsToFinalSalvage(simgame.Constants, mech, parts);
-        }
-
-        private static void SalvageParts(ContractHelper contract, Vehicle vehicle, MechDef mech)
-        {
-            if (!string.IsNullOrEmpty(Control.Instance.Settings.NoVehiclePartsTag))
-                if (vehicle.VehicleDef.VehicleTags.Contains(Control.Instance.Settings.NoVehiclePartsTag))
-                {
-                    Log.Main.Debug?.Log($"Salvaging {mech.Description.Id} - no parts by tags");
-                    return;
-                }
-
-            var simgame = contract.Contract.BattleTechGame.Simulation;
-            var parts = NumParts(vehicle, simgame);
-
-            if (string.IsNullOrEmpty(CustomSalvage.Control.Instance.Settings.NoSalvageVehicleTag) || !vehicle.VehicleDef.VehicleTags.Contains(CustomSalvage.Control.Instance.Settings.NoSalvageVehicleTag))
+            }
+            else
+            {
                 contract.AddMechPartsToPotentialSalvage(simgame.Constants, mech, parts);
+            }
         }
     }
-
-
 }
