@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using BattleTech;
-using CustomSalvage;
 using Harmony;
 using HBS.Logging;
 using HBS.Util;
-using UnityEngine;
 
 namespace LewdableTanks
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using BattleTech;
-using BattleTech.UI;
-using FluffyUnderware.DevTools;
+﻿using BattleTech.UI;
 using Harmony;
 
 namespace LewdableTanks.Patches

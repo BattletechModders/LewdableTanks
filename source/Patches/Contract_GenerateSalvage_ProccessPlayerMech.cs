@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using BattleTech;
-using CustomComponents;
 using Harmony;
-using UIWidgetsSamples;
 using UnityEngine;
 using Contract_GenerateSalvage = CustomSalvage.Contract_GenerateSalvage;
 using ContractHelper = CustomSalvage.ContractHelper;

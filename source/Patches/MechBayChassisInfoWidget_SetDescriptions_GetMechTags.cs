@@ -1,7 +1,5 @@
-﻿using System.Runtime.InteropServices.WindowsRuntime;
-using BattleTech;
+﻿using BattleTech;
 using BattleTech.Data;
-using BattleTech.UI;
 using CustomSalvage;
 using Harmony;
 using HBS.Collections;
