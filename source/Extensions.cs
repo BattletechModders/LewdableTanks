@@ -1,64 +1,63 @@
 ﻿using BattleTech;
 
-namespace LewdableTanks
+namespace LewdableTanks;
+
+public static class Extensions
 {
-    public static class Extensions
+    public static bool IsVehicle(this MechDef mech)
     {
-        public static bool IsVehicle(this MechDef mech)
+        if (mech == null)
         {
-            if (mech == null)
-            {
-                return false;
-            }
-
-            if (mech.MechTags != null && mech.MechTags.Contains("fake_vehicle"))
-            {
-                return true;
-            }
-
-            return IsVehicle(mech.Chassis);
+            return false;
         }
 
-        public static bool IsVehicle(this ChassisDef chassis)
+        if (mech.MechTags != null && mech.MechTags.Contains("fake_vehicle"))
         {
-            if (chassis == null)
-            {
-                return false;
-            }
-
-            return chassis.ChassisTags != null && chassis.ChassisTags.Contains("fake_vehicle_chassis");
+            return true;
         }
 
-        private static string NoSalvageTag => CustomSalvage.Control.Instance.Settings.NoSalvageVehicleTag;
-        internal static bool IsNoSalvage(this MechDef mech)
+        return IsVehicle(mech.Chassis);
+    }
+
+    public static bool IsVehicle(this ChassisDef chassis)
+    {
+        if (chassis == null)
         {
-            if (mech == null)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(NoSalvageTag))
-            {
-                return false;
-            }
-
-            return mech.MechTags != null && mech.MechTags.Contains(NoSalvageTag);
+            return false;
         }
 
-        private static string NoVehiclePartsTag => Control.Instance.Settings.NoVehiclePartsTag;
-        internal static bool IsNoVehicleParts(this MechDef mech)
+        return chassis.ChassisTags != null && chassis.ChassisTags.Contains("fake_vehicle_chassis");
+    }
+
+    private static string NoSalvageTag => CustomSalvage.Control.Instance.Settings.NoSalvageVehicleTag;
+    internal static bool IsNoSalvage(this MechDef mech)
+    {
+        if (mech == null)
         {
-            if (mech == null)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(NoVehiclePartsTag))
-            {
-                return false;
-            }
-
-            return mech.MechTags != null && mech.MechTags.Contains(NoVehiclePartsTag);
+            return false;
         }
+
+        if (string.IsNullOrEmpty(NoSalvageTag))
+        {
+            return false;
+        }
+
+        return mech.MechTags != null && mech.MechTags.Contains(NoSalvageTag);
+    }
+
+    private static string NoVehiclePartsTag => Control.Instance.Settings.NoVehiclePartsTag;
+    internal static bool IsNoVehicleParts(this MechDef mech)
+    {
+        if (mech == null)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(NoVehiclePartsTag))
+        {
+            return false;
+        }
+
+        return mech.MechTags != null && mech.MechTags.Contains(NoVehiclePartsTag);
     }
 }

@@ -1,26 +1,24 @@
 ﻿using CustomUnits;
 using Harmony;
 
-namespace LewdableTanks.Patches
+namespace LewdableTanks.Patches;
+
+[HarmonyPatch(typeof(MechBayMechInfoWidget_OnUnreadyClicked))]
+[HarmonyPatch("Prefix")]
+public static class MechBayMechInfoWidget_OnUnreadyClicked_Prefix
 {
+    public static bool allowedit;
 
-    [HarmonyPatch(typeof(MechBayMechInfoWidget_OnUnreadyClicked))]
-    [HarmonyPatch("Prefix")]
-    public static class MechBayMechInfoWidget_OnUnreadyClicked_Prefix
+    [HarmonyPrefix]
+    public static void CancelUnready()
     {
-        public static bool allowedit;
+        allowedit = Core.Settings.AllowVehiclesEdit;
+        Core.Settings.AllowVehiclesEdit = true;
+    }
 
-        [HarmonyPrefix]
-        public static void CancelUnready()
-        {
-            allowedit = Core.Settings.AllowVehiclesEdit;
-            Core.Settings.AllowVehiclesEdit = true;
-        }
-
-        [HarmonyPostfix]
-        public static void Rollback()
-        {
-            Core.Settings.AllowVehiclesEdit = allowedit;
-        }
+    [HarmonyPostfix]
+    public static void Rollback()
+    {
+        Core.Settings.AllowVehiclesEdit = allowedit;
     }
 }

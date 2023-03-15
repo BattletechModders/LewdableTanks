@@ -1,10 +1,9 @@
 ﻿using CustomComponents;
 
-namespace LewdableTanks
+namespace LewdableTanks;
+
+[CustomComponent("UIName")]
+public class UIName
 {
-    [CustomComponent("UIName")]
-    public class UIName
-    {
-        public string N { get; set; } = null;
-    }
+    public string N { get; set; } = null;
 }
