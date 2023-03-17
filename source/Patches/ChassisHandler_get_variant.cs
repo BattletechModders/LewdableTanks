@@ -9,17 +9,25 @@ namespace LewdableTanks.Patches;
 public static class ChassisHandler_get_variant
 {
     [HarmonyPrefix]
-    public static bool get_vehicle_custom(MechDef mech, ref IAssemblyVariant __result)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, MechDef mech, ref IAssemblyVariant __result)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         if (!mech.IsVehicle())
-            return true;
+        {
+            return;
+        }
 
         string id = mech.Description.Id;
         var vehicle = UnityGameInstance.BattleTechGame.Simulation.DataManager.VehicleDefs.Get(id);
         if(vehicle != null)
             __result = vehicle.Chassis.GetComponent<VAssemblyVariant>();
 
-        return false;
+        __runOriginal = false;
     }
 
 }

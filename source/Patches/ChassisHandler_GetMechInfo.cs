@@ -12,10 +12,18 @@ namespace LewdableTanks.Patches;
 public static class ChassisHandler_GetMechInfo
 {
     [HarmonyPrefix]
-    public static bool GetVehicleInfo(MechDef mech, ref ChassisHandler.mech_info __result)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, MechDef mech, ref ChassisHandler.mech_info __result)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         if (!mech.IsVehicle())
-            return true;
+        {
+            return;
+        }
 
         __result = new ChassisHandler.mech_info();
         string id = mech.Description.Id;
@@ -78,6 +86,6 @@ public static class ChassisHandler_GetMechInfo
 
         __result.PrefabID = ChassisHandler.GetPrefabId(mech);
 
-        return false;
+        __runOriginal = false;
     }
 }

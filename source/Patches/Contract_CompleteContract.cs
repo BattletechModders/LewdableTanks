@@ -8,7 +8,8 @@ namespace LewdableTanks.Patches;
 public static class Contract_CompleteContract
 {
     [HarmonyPostfix]
-    public static void RepairTanks(Contract __instance)
+    [HarmonyWrapSafe]
+    public static void Postfix(Contract __instance)
     {
         void repair_location(MechDef mech, ChassisLocations location)
         {

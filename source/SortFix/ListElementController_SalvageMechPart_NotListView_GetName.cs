@@ -7,9 +7,16 @@ namespace LewdableTanks.SortFix;
 public static class ListElementController_SalvageMechPart_NotListView_GetName
 {
     [HarmonyPrefix]
-    public static bool GetName(ListElementController_SalvageMechPart_NotListView __instance, ref string __result)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, ListElementController_SalvageMechPart_NotListView __instance, ref string __result)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         __result = __instance.salvageDef.Description.Name;
-        return false;
+
+        __runOriginal = false;
     }
 }

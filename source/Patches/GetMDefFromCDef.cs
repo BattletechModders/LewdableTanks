@@ -7,14 +7,19 @@ namespace LewdableTanks.Patches;
 public static class ChassisHandler_GetMDefFromCDef
 {
     [HarmonyPrefix]
-    public static bool GetVDefFromCDef(ref string __result, string cdefid)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, ref string __result, string cdefid)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
 
         if (!cdefid.StartsWith("vehiclechassisdef"))
-            return true;
+            return;
 
         __result = cdefid.Replace("vehiclechassisdef", "vehicledef");
-        return false;
+        __runOriginal = false;
     }
 }
 
@@ -23,12 +28,18 @@ public static class ChassisHandler_GetMDefFromCDef
 public static class Control_GetMDefFromCDef
 {
     [HarmonyPrefix]
-    public static bool GetVDefFromCDef(ref string __result, string id)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, ref string __result, string id)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         if (!id.StartsWith("vehiclechassisdef"))
-            return true;
+            return;
 
         __result = id.Replace("vehiclechassisdef", "vehicledef");
-        return false;
+        __runOriginal = false;
     }
 }

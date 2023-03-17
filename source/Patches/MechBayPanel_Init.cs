@@ -7,7 +7,8 @@ namespace LewdableTanks.Patches;
 public static class MechBayPanel_Init
 {
     [HarmonyPostfix]
-    public static void show_all(MechBayPanel __instance)
+    [HarmonyWrapSafe]
+    public static void Postfix(MechBayPanel __instance)
     {
         var sim = __instance.Sim;
 

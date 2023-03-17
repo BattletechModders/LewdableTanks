@@ -31,12 +31,16 @@
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(LewdableTanksModPath)" />
   </Target>
   <ItemGroup>
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.3.0" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.0">
+      <PrivateAssets>all</PrivateAssets>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="HarmonyX" Version="2.10.1">
+      <PrivateAssets>all</PrivateAssets>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Assembly-CSharp" Publicize="true">
       <Private>False</Private>
     </Reference>

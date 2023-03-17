@@ -10,22 +10,28 @@ namespace LewdableTanks.Patches;
 public static class MechBayChassisUnitElement_SetData_GetMechTags
 {
     [HarmonyPrefix]
-    public static bool GetVehicleTags(ChassisDef chassis, DataManager dm, ref TagSet __result)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, ChassisDef chassis, DataManager dm, ref TagSet __result)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         if (!chassis.IsVehicle())
-            return true;
+            return;
 
         var mid = ChassisHandler.GetMDefFromCDef(chassis.Description.Id);
         var mech = dm.VehicleDefs.Get(mid);
         if (mech == null)
         { 
             Log.Main.Error?.Log("Cannot find vehicle with id " + mid);
-            return true;
+            return;
         }
 
 
         __result = mech.VehicleTags;
 
-        return false;
+        __runOriginal = false;
     }
 }

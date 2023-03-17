@@ -8,12 +8,21 @@ namespace LewdableTanks.Patches;
 public static class ChassisHandler_GetMechType
 {
     [HarmonyPrefix]
-    public static bool GetVehicleType(MechDef mech, ref string __result)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, MechDef mech, ref string __result)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         if (!mech.IsVehicle())
-            return true;
+        {
+            return;
+        }
 
         __result = "Vehicle";
-        return false;
+
+        __runOriginal = false;
     }
 }

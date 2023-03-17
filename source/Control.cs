@@ -6,7 +6,6 @@ namespace LewdableTanks;
 
 public class Control
 {
-    private const string ModName = "LewdableTanks";
     public Settings Settings = new Settings();
 
     private static Control _control;
@@ -40,10 +39,10 @@ public class Control
                 Settings = new();
             }
 
-            var harmony = HarmonyInstance.Create($"{ModName}");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), "LewdableTanks");
+
             Log.Main.Info?.Log("=========================================================");
-            Log.Main.Info?.Log($"Loaded {ModName} v0.5 for bt 1.9");
+            Log.Main.Info?.Log($"Loaded LewdableTanks v0.5 for bt 1.9");
             Log.Main.Info?.Log("=========================================================");
 
             if (Settings.ShowSettingsOnLoad) Log.Main.Debug?.Log(JSONSerializationUtility.ToJSON(Settings));

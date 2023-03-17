@@ -9,11 +9,19 @@ namespace LewdableTanks.Patches;
 public static class ChassisHandler_build_mech_tags
 {
     [HarmonyPrefix]
-    public static bool build_vehicle_tags(MechDef mech, ref HashSet<string> __result)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, MechDef mech, ref HashSet<string> __result)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         var chassisDef = mech.Chassis;
         if (!chassisDef.IsVehicle())
-            return true;
+        {
+            return;
+        }
 
         __result = new HashSet<string>();
         if (mech.MechTags != null)
@@ -22,6 +30,6 @@ public static class ChassisHandler_build_mech_tags
             __result.UnionWith(mech.Chassis.ChassisTags);
 
 
-        return false;
+        __runOriginal = false;
     }
 }

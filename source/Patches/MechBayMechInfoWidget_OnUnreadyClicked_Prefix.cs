@@ -9,14 +9,21 @@ public static class MechBayMechInfoWidget_OnUnreadyClicked_Prefix
     public static bool allowedit;
 
     [HarmonyPrefix]
-    public static void CancelUnready()
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         allowedit = Core.Settings.AllowVehiclesEdit;
         Core.Settings.AllowVehiclesEdit = true;
     }
 
     [HarmonyPostfix]
-    public static void Rollback()
+    [HarmonyWrapSafe]
+    public static void Postfix()
     {
         Core.Settings.AllowVehiclesEdit = allowedit;
     }

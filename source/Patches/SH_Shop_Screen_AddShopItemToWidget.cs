@@ -11,10 +11,16 @@ namespace LewdableTanks.Patches;
 public static class SH_Shop_Screen_AddShopItemToWidget
 {
     [HarmonyPrefix]
-    public static bool FixGetMechdef(ref ShopDefItem itemDef, Shop shop, bool isBulkAdd, bool isSelling, IMechLabDropTarget targetWidget,
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, ref ShopDefItem itemDef, Shop shop, bool isBulkAdd, bool isSelling, IMechLabDropTarget targetWidget,
         MechLabInventoryWidget_ListView ___inventoryWidget, bool ___isInBuyingState, SimGameState ___simState,
         SG_Shop_Screen __instance)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         if (itemDef.Type == ShopItemType.Mech && !___isInBuyingState)
         {
             var dataManager = ___simState.DataManager;
@@ -37,9 +43,7 @@ public static class SH_Shop_Screen_AddShopItemToWidget
                     inventoryDataObject_ShopFullMech2.SetItemDraggable(false);
                 }
             }
-            return false;
+            __runOriginal = false;
         }
-
-        return true;
     }
 }

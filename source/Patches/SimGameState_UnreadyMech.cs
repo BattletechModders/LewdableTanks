@@ -7,18 +7,30 @@ namespace LewdableTanks.Patches;
 public static class SimGameState_UnreadyMech
 {
     [HarmonyPrefix]
-    public static bool UnreadyVehicle(int baySlot, MechDef def, SimGameState __instance)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, int baySlot, MechDef def, SimGameState __instance)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         if (!def.IsVehicle())
-            return true;
+        {
+            return;
+        }
+
         if (def == null || (baySlot > 0 && !__instance.ActiveMechs.ContainsKey(baySlot)))
-            return false;
+        {
+            __runOriginal = false;
+            return;
+        }
 
 
         if (__instance.ActiveMechs.ContainsKey(baySlot))
             __instance.ActiveMechs.Remove(baySlot);
 
         __instance.AddItemStat(def.Chassis.Description.Id, def.GetType(), false);
-        return false;
+        __runOriginal = false;
     }
 }

@@ -11,13 +11,14 @@ namespace LewdableTanks.Patches;
 public static class Contract_GenerateSalvage_ProccessPlayerMech
 {
     [HarmonyPrefix]
-    public static bool ProcessPlayerVehicle(UnitResult unitResult, ContractHelper Contract)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, UnitResult unitResult, ContractHelper Contract)
     {
         var mech = unitResult.mech;
         if (Control.Instance.Settings.LostVehicleAction == PlayerVehicleAction.None)
         {
             Log.Main.Debug?.Log($"- None action for player vehicle, skipping");
-            return true;
+            return;
         }
 
         var original = UnityGameInstance.BattleTechGame.DataManager.MechDefs.Get(mech.Description.Id);
@@ -25,7 +26,7 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
         if (!original.IsVehicle())
         {
             Log.Main.Debug?.Log($"- {mech.Description.Id} with GUID {mech.GUID} is not vehicle, return to mech process");
-            return true;
+            return;
         }
 
         Log.Main.Debug?.Log("-- vehicles:");
@@ -43,7 +44,8 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
         {
             Log.Main.Error?.Log($"Vehicle {mech.Description.Id} with GUID {mech.GUID} not found, return vehicle to player fallback");
             unitResult.mechLost = false;
-            return false;
+            __runOriginal = false;
+            return;
         }
 
         unitResult.mechLost = !CanRecoverVehicle(vehicle);
@@ -66,7 +68,7 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
             }
         }
 
-        return false;
+        __runOriginal = false;
     }
 
     private static bool IsDeadVehicle(this AbstractActor vehicle)

@@ -12,8 +12,14 @@ public static class ChassisHandler_MakeMech
     public static BrokeType broke = BrokeType.None;
 
     [HarmonyPrefix]
-    public static void Prepare()
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         var mech = new Traverse(typeof(ChassisHandler)).Field<MechDef>("mech").Value;
         in_work = mech.IsVehicle();
         if (in_work)
@@ -27,7 +33,8 @@ public static class ChassisHandler_MakeMech
     }
 
     [HarmonyPostfix]
-    public static void Finish()
+    [HarmonyWrapSafe]
+    public static void Postfix()
     {
         if (in_work)
         {

@@ -8,10 +8,18 @@ namespace LewdableTanks.Patches;
 public static class ShopDefItem_ToSalvageDef
 {
     [HarmonyPrefix]
-    public static bool ToVehicleSalvageDef(ref SalvageDef salvageDef, ShopDefItem __instance)
+    [HarmonyWrapSafe]
+    public static void Prefix(ref bool __runOriginal, ref SalvageDef salvageDef, ShopDefItem __instance)
     {
+        if (!__runOriginal)
+        {
+            return;
+        }
+
         if (__instance.Type != ShopItemType.Mech)
-            return true;
+        {
+            return;
+        }
 
         var dataManager = SceneSingletonBehavior<UnityGameInstance>.Instance.Game.DataManager;
         string id = CustomSalvage.ChassisHandler.GetMDefFromCDef(__instance.GUID);
@@ -22,14 +30,11 @@ public static class ShopDefItem_ToSalvageDef
         }
         MechDef mechDef4 = new MechDef(mechDef3, null, true);
         mechDef4.Refresh();
-        if (mechDef4 != null)
-        {
-            salvageDef.MechComponentDef = null;
-            salvageDef.Description = mechDef3.Description;
-            salvageDef.Type = SalvageDef.SalvageType.CHASSIS;
-            salvageDef.ComponentType = ComponentType.MechPart;
-        }
-        return false;
+        salvageDef.MechComponentDef = null;
+        salvageDef.Description = mechDef3.Description;
+        salvageDef.Type = SalvageDef.SalvageType.CHASSIS;
+        salvageDef.ComponentType = ComponentType.MechPart;
 
+        __runOriginal = false;
     }
 }
