@@ -1,7 +1,6 @@
 ﻿using System;
 using BattleTech;
 using CustomSalvage;
-using Harmony;
 using UnityEngine;
 
 namespace LewdableTanks.Patches;

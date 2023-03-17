@@ -1,5 +1,4 @@
 ﻿using BattleTech;
-using Harmony;
 using HBS;
 
 namespace LewdableTanks.Patches;

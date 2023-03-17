@@ -1,7 +1,6 @@
 ﻿using BattleTech;
 using BattleTech.Data;
 using CustomSalvage;
-using Harmony;
 using HBS.Collections;
 
 namespace LewdableTanks.Patches;

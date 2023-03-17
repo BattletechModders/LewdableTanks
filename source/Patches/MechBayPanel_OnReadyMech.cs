@@ -3,7 +3,6 @@ using BattleTech;
 using BattleTech.UI;
 using CustomSalvage;
 using CustomUnits;
-using Harmony;
 using Strings = Localize.Strings;
 
 namespace LewdableTanks.Patches;

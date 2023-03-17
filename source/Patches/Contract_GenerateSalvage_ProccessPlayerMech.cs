@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using BattleTech;
-using Harmony;
 using UnityEngine;
 using Contract_GenerateSalvage = CustomSalvage.Contract_GenerateSalvage;
 using ContractHelper = CustomSalvage.ContractHelper;

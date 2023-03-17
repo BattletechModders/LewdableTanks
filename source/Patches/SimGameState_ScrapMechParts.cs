@@ -1,5 +1,4 @@
 ﻿using BattleTech;
-using Harmony;
 using UnityEngine;
 
 namespace LewdableTanks.Patches;

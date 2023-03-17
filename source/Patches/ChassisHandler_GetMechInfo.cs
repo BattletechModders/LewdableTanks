@@ -3,7 +3,6 @@ using System.Linq;
 using BattleTech;
 using CustomComponents;
 using CustomSalvage;
-using Harmony;
 using UnityEngine;
 
 namespace LewdableTanks.Patches;

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Reflection;
-using Harmony;
-using HBS.Logging;
 using HBS.Util;
 
 namespace LewdableTanks;
