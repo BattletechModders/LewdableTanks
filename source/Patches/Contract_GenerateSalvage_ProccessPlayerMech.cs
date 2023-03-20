@@ -163,7 +163,7 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
             {
                 if (rnd < chance)
                 {
-                    Log.Main.Debug?.Log($"-- {rnd:0.00}<{chance:0.00}, recovered {component.ComponentDefID}");
+                    Log.Main.Debug?.Log($"-- {rnd:0.00}<{chance:0.00}, recovered {component.ComponentDefID} isFinal={isFinal}");
                     if (isFinal)
                     {
                         contract.AddComponentToFinalSalvage(component.Def);
@@ -195,6 +195,7 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
         }
 
         var simgame = contract.Contract.BattleTechGame.Simulation;
+        Log.Main.Debug?.Log($"Salvaging {mech.Description.Id} parts isFinal={isFinal}");
         var parts = NumParts(vehicle, simgame);
 
         if (isFinal)
