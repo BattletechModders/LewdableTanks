@@ -188,6 +188,7 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
 
     private static void SalvageParts(ContractHelper contract, Mech vehicle, MechDef mech, bool isFinal)
     {
+        Log.Main.Trace?.Log($"Checking {mech.Description.Id} Mech:{string.Join(",", vehicle.MechDef.MechTags)} MechDef:{string.Join(",", mech.MechTags)}");
         if (vehicle.MechDef.IsNoVehicleParts() || vehicle.MechDef.IsNoSalvage())
         {
             Log.Main.Debug?.Log($"Returning {mech.Description.Id} - no parts by tags");
