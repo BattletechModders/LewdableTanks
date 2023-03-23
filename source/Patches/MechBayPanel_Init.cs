@@ -13,7 +13,9 @@ public static class MechBayPanel_Init
         var sim = __instance.Sim;
 
         if (Log.Main.Trace != null)
+        {
             return;
+        }
 
 
         Log.Main.Trace?.Log("Player Mech:");

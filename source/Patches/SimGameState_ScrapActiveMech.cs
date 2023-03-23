@@ -36,7 +36,9 @@ public class SimGameState_ScrapActiveMech
         }
 
         if (__instance.ActiveMechs.ContainsKey(baySlot))
+        {
             __instance.ActiveMechs.Remove(baySlot);
+        }
 
         __instance.AddFunds(Mathf.RoundToInt((float)def.Description.Cost * __instance.Constants.Finances.MechScrapModifier), "Scrapping", true, true);
 

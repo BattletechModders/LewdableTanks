@@ -25,9 +25,14 @@ public static class ChassisHandler_build_mech_tags
 
         __result = new HashSet<string>();
         if (mech.MechTags != null)
+        {
             __result.UnionWith(mech.MechTags);
+        }
+
         if (mech.Chassis.ChassisTags != null)
+        {
             __result.UnionWith(mech.Chassis.ChassisTags);
+        }
 
 
         __runOriginal = false;

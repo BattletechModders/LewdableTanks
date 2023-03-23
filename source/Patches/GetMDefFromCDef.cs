@@ -16,7 +16,9 @@ public static class ChassisHandler_GetMDefFromCDef
         }
 
         if (!cdefid.StartsWith("vehiclechassisdef"))
+        {
             return;
+        }
 
         __result = cdefid.Replace("vehiclechassisdef", "vehicledef");
         __runOriginal = false;
@@ -37,7 +39,9 @@ public static class Control_GetMDefFromCDef
         }
 
         if (!id.StartsWith("vehiclechassisdef"))
+        {
             return;
+        }
 
         __result = id.Replace("vehiclechassisdef", "vehicledef");
         __runOriginal = false;

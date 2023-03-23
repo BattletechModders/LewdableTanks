@@ -22,7 +22,9 @@ public static class MechBayPanel_OnReadyMech
 
         var chassisDef = chassisElement.ChassisDef;
         if (!chassisDef.IsVehicle())
+        {
             return;
+        }
 
         var id = chassisElement.ChassisDef.Description.Id;
         var sim = __instance.Sim;
@@ -35,7 +37,10 @@ public static class MechBayPanel_OnReadyMech
 
             MechDef mech_in_slot = null;
             if (!sim.ActiveMechs.TryGetValue(i, out mech_in_slot))
+            {
                 sim.ReadyingMechs.TryGetValue(i, out mech_in_slot);
+            }
+
             if (mech_in_slot == null)
             {
                 baySlot = i;

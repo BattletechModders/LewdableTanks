@@ -11,12 +11,16 @@ public static class SimGameState_ScrapInactiveMech
     public static bool ScrapInactiveVehicle(string id, bool pay, SimGameState __instance, ref bool __result)
     {
         if (!__instance.DataManager.Exists(BattleTechResourceType.ChassisDef, id))
+        {
             return true;
+        }
 
         var def = __instance.DataManager.ChassisDefs.Get(id);
         if (!def.IsVehicle())
+        {
             return true;
-            
+        }
+
         __result = false;
         if (__instance.GetItemCount(id, typeof(MechDef), SimGameState.ItemCountType.UNDAMAGED_ONLY) > 0)
         {

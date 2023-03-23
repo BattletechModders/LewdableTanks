@@ -25,7 +25,9 @@ public static class ChassisHandler_get_variant
         string id = mech.Description.Id;
         var vehicle = UnityGameInstance.BattleTechGame.Simulation.DataManager.VehicleDefs.Get(id);
         if(vehicle != null)
+        {
             __result = vehicle.Chassis.GetComponent<VAssemblyVariant>();
+        }
 
         __runOriginal = false;
     }

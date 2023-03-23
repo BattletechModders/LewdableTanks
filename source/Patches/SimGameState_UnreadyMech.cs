@@ -28,7 +28,9 @@ public static class SimGameState_UnreadyMech
 
 
         if (__instance.ActiveMechs.ContainsKey(baySlot))
+        {
             __instance.ActiveMechs.Remove(baySlot);
+        }
 
         __instance.AddItemStat(def.Chassis.Description.Id, def.GetType(), false);
         __runOriginal = false;

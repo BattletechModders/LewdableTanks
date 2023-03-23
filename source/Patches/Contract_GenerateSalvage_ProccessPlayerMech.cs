@@ -85,7 +85,9 @@ internal static class Contract_GenerateSalvage_ProccessPlayerMech
     private static bool CanRecoverVehicle(AbstractActor actor)
     {
         if (!actor.IsDeadVehicle())
+        {
             return true;
+        }
 
         switch (SSettings.Recovery)
         {

@@ -26,9 +26,13 @@ internal class VehicleDescriptionFixer : IMechDefProcessor
                              .Select(i => i.Def as WeaponDef))
                 {
                     if (d.ContainsKey(item.Description.UIName))
+                    {
                         d[item.Description.UIName] += 1;
+                    }
                     else
+                    {
                         d[item.Description.UIName] = 1;
+                    }
                 }
 
                 foreach (var pair in d)

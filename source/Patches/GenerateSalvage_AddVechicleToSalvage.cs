@@ -27,11 +27,13 @@ internal static class GenerateSalvage_AddVechicleToSalvage
         if (simgame.DataManager.MechDefs.TryGet(vid, out var mech))
         {
             if (!string.IsNullOrEmpty(Control.Instance.Settings.NoVehiclePartsTag))
+            {
                 if (vechicle.VehicleDef.VehicleTags.Contains(Control.Instance.Settings.NoVehiclePartsTag))
                 {
                     Log.Main.Debug?.Log($"Salvaging {vid} - no parts by tags");
                     return;
                 }
+            }
 
             int min_parts = 1;
             int max_parts = simgame.Constants.Story.DefaultMechPartMax;
@@ -45,6 +47,8 @@ internal static class GenerateSalvage_AddVechicleToSalvage
             contract.AddMechPartsToPotentialSalvage(simgame.Constants, mech, parts);
         }
         else
+        {
             Log.Main.Error?.Log($"Cannot find fake mech for {vid}");
+        }
     }
 }

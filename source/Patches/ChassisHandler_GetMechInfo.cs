@@ -38,18 +38,29 @@ public static class ChassisHandler_GetMechInfo
                         vehicle.VehicleTags.Contains(Control.Instance.Settings.OmniTechTag);
 
         if (!Control.Instance.Settings.AllowFrankenTank)
+        {
             __result.Excluded = true;
+        }
         else if (assembly != null && assembly.Exclude)
+        {
             __result.Excluded = true;
+        }
         else if (assembly != null && assembly.Include)
+        {
             __result.Excluded = false;
+        }
         else
         if (css.ExcludeVariants.Contains(id))
+        {
             __result.Excluded = true;
+        }
         else if (css.ExcludeTags.Any(extag => vehicle.VehicleTags.Contains(extag)))
+        {
             __result.Excluded = true;
+        }
 
         if (css.SpecialTags != null && css.SpecialTags.Length > 0)
+        {
             foreach (var tag_info in css.SpecialTags)
             {
                 if (vehicle.VehicleTags.Contains(tag_info.Tag))
@@ -59,19 +70,28 @@ public static class ChassisHandler_GetMechInfo
                     __result.Special = true;
                 }
             }
+        }
 
         if (__result.Omni)
+        {
             __result.MinParts = 1;
+        }
 
         if (assembly != null)
         {
             if (assembly.ReplacePriceMult)
+            {
                 __result.PriceMult = assembly.PriceMult;
+            }
             else
+            {
                 __result.PriceMult *= assembly.PriceMult;
+            }
 
             if (assembly.PartsMin >= 0)
+            {
                 __result.MinParts = Mathf.CeilToInt(max_parts * assembly.PartsMin);
+            }
         }
 
         Log.Main.Debug?.Log($"GetVehicle info for {vehicle.Chassis.Description.Id}");

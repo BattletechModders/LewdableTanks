@@ -30,7 +30,9 @@ public static class ChassisHandler_GetPrefabId
             : vehicle.Chassis.PrefabIdentifier);
 
         if (Control.Instance.Settings.AddTonnageToPrefabID)
+        {
             __result += vehicle.Chassis.Tonnage.ToString();
+        }
 
         __runOriginal = false;
     }

@@ -15,7 +15,10 @@ public class Control
         get
         {
             if (_control == null)
+            {
                 _control = new Control();
+            }
+
             return _control;
         }
     }
@@ -45,15 +48,27 @@ public class Control
             Log.Main.Info?.Log($"Loaded LewdableTanks v0.5 for bt 1.9");
             Log.Main.Info?.Log("=========================================================");
 
-            if (Settings.ShowSettingsOnLoad) Log.Main.Debug?.Log(JSONSerializationUtility.ToJSON(Settings));
+            if (Settings.ShowSettingsOnLoad)
+            {
+                Log.Main.Debug?.Log(JSONSerializationUtility.ToJSON(Settings));
+            }
+
             CustomComponents.Registry.RegisterSimpleCustomComponents(Assembly.GetExecutingAssembly());
 
             if (Settings.FixMechPartCost)
+            {
                 CustomComponents.MechDefProcessing.Instance.Register(new VehicleCostFixer());
+            }
+
             if (Settings.FixUIName)
+            {
                 CustomComponents.MechDefProcessing.Instance.Register(new VehicleUINameFixer());
+            }
+
             if (Settings.AddWeaponToDescription)
+            {
                 CustomComponents.MechDefProcessing.Instance.Register(new VehicleDescriptionFixer());
+            }
 
             Log.Main.Debug?.Log("done");
 

@@ -11,7 +11,9 @@ internal class VehicleUINameFixer : IMechDefProcessor
         foreach (var mechDef in mechDefs)
         {
             if (!string.IsNullOrEmpty(mechDef.Description.UIName))
+            {
                 continue;
+            }
 
             if (!mechDef.IsVehicle())
             {

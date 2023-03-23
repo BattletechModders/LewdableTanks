@@ -19,7 +19,9 @@ public static class MechBayChassisUnitElement_SetData_GetMechTags
         }
 
         if (!chassis.IsVehicle())
+        {
             return;
+        }
 
         var mid = ChassisHandler.GetMDefFromCDef(chassis.Description.Id);
         var mech = dm.VehicleDefs.Get(mid);
