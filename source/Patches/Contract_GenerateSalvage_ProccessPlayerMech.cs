@@ -8,62 +8,60 @@ namespace LewdableTanks.Patches;
 
 [HarmonyPatch(typeof(Contract_GenerateSalvage))]
 [HarmonyPatch("ProccessPlayerMech")]
-public static class Contract_GenerateSalvage_ProccessPlayerMech
+internal static class Contract_GenerateSalvage_ProccessPlayerMech
 {
+    private static Settings SSettings => Control.Instance.Settings;
+    private static GameInstance SBattleTechGame => UnityGameInstance.BattleTechGame;
+    private static SimGameConstants SSimGameConstants => SBattleTechGame.Simulation.Constants;
+    private static NetworkRandom SNetworkRandom => SBattleTechGame.Simulation.NetworkRandom;
+
     [HarmonyPrefix]
     [HarmonyWrapSafe]
     public static void Prefix(ref bool __runOriginal, UnitResult unitResult, ContractHelper Contract)
     {
-        var mech = unitResult.mech;
-        if (Control.Instance.Settings.LostVehicleAction == PlayerVehicleAction.None)
+        var mechDef = unitResult.mech;
+        if (SSettings.LostVehicleAction == PlayerVehicleAction.None)
         {
             Log.Main.Debug?.Log($"- None action for player vehicle, skipping");
             return;
         }
 
-        var original = UnityGameInstance.BattleTechGame.DataManager.MechDefs.Get(mech.Description.Id);
+        var original = SBattleTechGame.DataManager.MechDefs.Get(mechDef.Description.Id);
 
         if (!original.IsVehicle())
         {
-            Log.Main.Debug?.Log($"- {mech.Description.Id} with GUID {mech.GUID} is not vehicle, return to mech process");
+            Log.Main.Debug?.Log($"- {mechDef.Description.Id} with GUID {mechDef.GUID} is not vehicle, return to mech process");
             return;
         }
 
         Log.Main.Debug?.Log("-- vehicles:");
-        Mech vehicle = null;
-        foreach (var v in Contract.Contract.BattleTechGame.Combat.AllActors.OfType<Mech>())
-        {
-            if (v.PilotableActorDef.GUID == mech.GUID)
-            {
-                vehicle = v;
-                break;
-            }
-        }
+        var mech = SBattleTechGame.Combat.AllActors.OfType<Mech>()
+            .FirstOrDefault(v => v.PilotableActorDef.GUID == mechDef.GUID);
 
-        if (vehicle == null)
+        if (mech == null)
         {
-            Log.Main.Error?.Log($"Vehicle {mech.Description.Id} with GUID {mech.GUID} not found, return vehicle to player fallback");
+            Log.Main.Error?.Log($"Vehicle {mechDef.Description.Id} with GUID {mechDef.GUID} not found, return vehicle to player fallback");
             unitResult.mechLost = false;
             __runOriginal = false;
             return;
         }
 
-        unitResult.mechLost = !CanRecoverVehicle(vehicle);
+        unitResult.mechLost = !CanRecoverVehicle(mech);
         if (unitResult.mechLost)
         {
-            switch (Control.Instance.Settings.LostVehicleAction)
+            switch (SSettings.LostVehicleAction)
             {
                 case PlayerVehicleAction.Salvage:
-                    SalvageVehicle(Contract, vehicle, mech, false);
+                    SalvageVehicle(Contract, mech, mechDef, false);
                     break;
                 case PlayerVehicleAction.Return:
-                    SalvageVehicle(Contract, vehicle, mech, true);
+                    SalvageVehicle(Contract, mech, mechDef, true);
                     break;
                 case PlayerVehicleAction.SalvageParts:
-                    SalvageParts(Contract, vehicle, mech, false);
+                    SalvageParts(Contract, mech, mechDef, false);
                     break;
                 case PlayerVehicleAction.ReturnParts:
-                    SalvageParts(Contract, vehicle, mech, true);
+                    SalvageParts(Contract, mech, mechDef, true);
                     break;
             }
         }
@@ -71,11 +69,11 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
         __runOriginal = false;
     }
 
-    private static bool IsDeadVehicle(this AbstractActor vehicle)
+    private static bool IsDeadVehicle(this AbstractActor actor)
     {
-        Log.Main.Debug?.Log($"Check Death for {vehicle.Description.Id}, deathmethod: {vehicle.DeathMethod}");
+        Log.Main.Debug?.Log($"Check Death for {actor.Description.Id}, deathmethod: {actor.DeathMethod}");
 
-        return vehicle.DeathMethod switch
+        return actor.DeathMethod switch
         {
             DeathMethod.NOT_SET => false,
             DeathMethod.DespawnedEscaped => false,
@@ -84,12 +82,12 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
         };
     }
 
-    private static bool CanRecoverVehicle(AbstractActor vehicle)
+    private static bool CanRecoverVehicle(AbstractActor actor)
     {
-        if (!vehicle.IsDeadVehicle())
+        if (!actor.IsDeadVehicle())
             return true;
 
-        switch (Control.Instance.Settings.Recovery)
+        switch (SSettings.Recovery)
         {
             case PlayerVehicleRecoveryType.AlwaysRecovery:
                 Log.Main.Debug?.Log(" --- allways recovery");
@@ -100,64 +98,60 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
                 return false;
 
             case PlayerVehicleRecoveryType.SimGameConstant:
-                var chance = CustomShops.Control.State.Sim.Constants.Salvage.DestroyedMechRecoveryChance + Control.Instance.Settings.RecoveryChanceConstantMod;
-                var rnd = CustomShops.Control.State.Sim.NetworkRandom.Float();
-                Log.Main.Debug?.Log(
-                    $" --- chance:{chance:0.00} roll:{rnd:0.00}, {(rnd < chance ? "recovered" : "failed")}");
+                var chance = SSimGameConstants.Salvage.DestroyedMechRecoveryChance + SSettings.RecoveryChanceConstantMod;
+                var rnd = SNetworkRandom.Float();
+                Log.Main.Debug?.Log($" --- chance:{chance:0.00} roll:{rnd:0.00}, {(rnd < chance ? "recovered" : "failed")}");
                 return rnd < chance;
 
             case PlayerVehicleRecoveryType.HpLeft:
-                var total = vehicle.SummaryArmorMax * Control.Instance.Settings.ArmorEffectOnHP+ vehicle.SummaryStructureMax;
-                var current = vehicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureCurrent;
-                var max = (current / total) * Control.Instance.Settings.RecoveryChanceHPMod + Control.Instance.Settings.RecoveryChanceHPBase ;
-                var roll = CustomShops.Control.State.Sim.NetworkRandom.Float();
-                Log.Main.Debug?.Log(
-                    $" --- chance:{max:0.00} roll:{roll:0.00}, {(roll < max ? "recovered" : "failed")}");
+                var total = actor.SummaryArmorMax * SSettings.ArmorEffectOnHP+ actor.SummaryStructureMax;
+                var current = actor.SummaryArmorCurrent * SSettings.ArmorEffectOnHP + actor.SummaryStructureCurrent;
+                var max = current / total * SSettings.RecoveryChanceHPMod + SSettings.RecoveryChanceHPBase ;
+                var roll = SNetworkRandom.Float();
+                Log.Main.Debug?.Log($" --- chance:{max:0.00} roll:{roll:0.00}, {(roll < max ? "recovered" : "failed")}");
                 return roll < max;
             case PlayerVehicleRecoveryType.HpLeftConstant:
-                var totalhp = vehicle.SummaryArmorMax * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureMax;
-                var currenthp = vehicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureCurrent;
-                var maxhp = (currenthp / totalhp + Control.Instance.Settings.RecoveryChanceHPBase) * Control.Instance.Settings.RecoveryChanceHPMod;
-                var bchance = CustomShops.Control.State.Sim.Constants.Salvage.DestroyedMechRecoveryChance +
-                              Control.Instance.Settings.RecoveryChanceConstantMod;
+                var totalhp = actor.SummaryArmorMax * SSettings.ArmorEffectOnHP + actor.SummaryStructureMax;
+                var currenthp = actor.SummaryArmorCurrent * SSettings.ArmorEffectOnHP + actor.SummaryStructureCurrent;
+                var maxhp = (currenthp / totalhp + SSettings.RecoveryChanceHPBase) * SSettings.RecoveryChanceHPMod;
+                var bchance = SSimGameConstants.Salvage.DestroyedMechRecoveryChance +
+                              SSettings.RecoveryChanceConstantMod;
                 var tchance = bchance + maxhp;
 
-                var r = CustomShops.Control.State.Sim.NetworkRandom.Float();
-                Log.Main.Debug?.Log(
-                    $" --- chance:{tchance:0.00} roll:{r:0.00}, base:{bchance:0.00}, Hp:{maxhp:0.00} {(r < tchance ? "recovered" : "failed")}");
+                var r = SNetworkRandom.Float();
+                Log.Main.Debug?.Log($" --- chance:{tchance:0.00} roll:{r:0.00}, base:{bchance:0.00}, Hp:{maxhp:0.00} {(r < tchance ? "recovered" : "failed")}");
                 return r < tchance;
         }
         return false;
     }
 
-
-    private static int NumParts(Mech vehicle, SimGameState simgame)
+    private static int NumParts(Mech mech)
     {
-        int min_parts = 1;
-        int max_parts = simgame.Constants.Story.DefaultMechPartMax;
+        const int minParts = 1;
+        var maxParts = SSimGameConstants.Story.DefaultMechPartMax;
 
-        var total = vehicle.SummaryArmorMax * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureMax;
-        var current = vehicle.SummaryArmorCurrent * Control.Instance.Settings.ArmorEffectOnHP + vehicle.SummaryStructureCurrent;
+        var total = mech.SummaryArmorMax * SSettings.ArmorEffectOnHP + mech.SummaryStructureMax;
+        var current = mech.SummaryArmorCurrent * SSettings.ArmorEffectOnHP + mech.SummaryStructureCurrent;
 
-        var parts = Mathf.Clamp(Mathf.CeilToInt(current / total * max_parts), min_parts, max_parts);
+        var parts = Mathf.Clamp(Mathf.CeilToInt(current / total * maxParts), minParts, maxParts);
         Log.Main.Debug?.Log($"-- hp: {current:0.0}/{total:0.0} parts:{parts}");
         return parts;
     }
 
-    private static void SalvageVehicle(ContractHelper contract, Mech vehicle, MechDef mech, bool isFinal)
+    private static void SalvageVehicle(ContractHelper contract, Mech mech, MechDef mechDef, bool isFinal)
     {
-        var vdef = vehicle.MechDef;
-        if (vdef == null)
+        SalvageParts(contract, mech, mechDef, isFinal);
+
+        if (mech.MechDef == null)
         {
-            Log.Main.Error?.Log("No vehicledef for return");
+            Log.Main.Error?.Log("-- MechDef is null for vehicle, ignoring component salvage");
+            return;
         }
 
-        SalvageParts(contract, vehicle, mech, isFinal);
-
-        var chance = Control.Instance.Settings.ModuleRecoveryChance;
-        foreach (var component in vehicle.MechDef.Inventory)
+        var chance = SSettings.ModuleRecoveryChance;
+        foreach (var component in mech.MechDef.Inventory)
         {
-            var rnd = CustomShops.Control.State.Sim.NetworkRandom.Float();
+            var rnd = SNetworkRandom.Float();
 
             if (component.DamageLevel != ComponentDamageLevel.Destroyed)
             {
@@ -186,26 +180,24 @@ public static class Contract_GenerateSalvage_ProccessPlayerMech
         }
     }
 
-    private static void SalvageParts(ContractHelper contract, Mech vehicle, MechDef mech, bool isFinal)
+    private static void SalvageParts(ContractHelper contract, Mech mech, MechDef mechDef, bool isFinal)
     {
-        Log.Main.Trace?.Log($"Checking {mech.Description.Id} Mech:{string.Join(",", vehicle.MechDef.MechTags)} MechDef:{string.Join(",", mech.MechTags)}");
-        if (vehicle.MechDef.IsNoVehicleParts() || vehicle.MechDef.IsNoSalvage())
+        if (mechDef.IsNoVehicleParts() || mechDef.IsNoSalvage())
         {
-            Log.Main.Debug?.Log($"Returning {mech.Description.Id} - no parts by tags");
+            Log.Main.Debug?.Log($"Returning {mechDef.Description.Id} - no parts by tags");
             return;
         }
 
-        var simgame = contract.Contract.BattleTechGame.Simulation;
-        Log.Main.Debug?.Log($"Salvaging {mech.Description.Id} parts isFinal={isFinal}");
-        var parts = NumParts(vehicle, simgame);
+        Log.Main.Debug?.Log($"Salvaging {mechDef.Description.Id} parts isFinal={isFinal}");
+        var parts = NumParts(mech);
 
         if (isFinal)
         {
-            contract.AddMechPartsToFinalSalvage(simgame.Constants, mech, parts);
+            contract.AddMechPartsToFinalSalvage(SSimGameConstants, mechDef, parts);
         }
         else
         {
-            contract.AddMechPartsToPotentialSalvage(simgame.Constants, mech, parts);
+            contract.AddMechPartsToPotentialSalvage(SSimGameConstants, mechDef, parts);
         }
     }
 }
