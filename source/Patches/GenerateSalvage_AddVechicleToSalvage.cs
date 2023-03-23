@@ -1,13 +1,12 @@
-﻿using System;
-using BattleTech;
+﻿using BattleTech;
 using CustomSalvage;
 using UnityEngine;
 
 namespace LewdableTanks.Patches;
 
-[HarmonyPatch(typeof(CustomSalvage.Contract_GenerateSalvage))]
+[HarmonyPatch(typeof(Contract_GenerateSalvage))]
 [HarmonyPatch("AddVechicleToSalvage")]
-public static class GenerateSalvage_AddVechicleToSalvage
+internal static class GenerateSalvage_AddVechicleToSalvage
 {
     [HarmonyPrefix]
     [HarmonyWrapSafe]
